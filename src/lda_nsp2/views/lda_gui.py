@@ -1,5 +1,6 @@
 import sys
 
+import pyqtgraph as pg
 from PySide6 import QtWidgets
 from PySide6.QtCore import Slot
 
@@ -7,10 +8,14 @@ from lda_nsp2.data_ingestion import Ingest_Data
 from lda_nsp2.models.fitting import gaussfit
 from lda_nsp2.views.lda_designer_gui import Ui_MainWindow
 
+pg.setConfigOption("background", 0.2)
+pg.setConfigOption("foreground", 0.5)
+
 
 class UserInterface(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
+        self.data = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -24,7 +29,10 @@ class UserInterface(QtWidgets.QMainWindow):
 
     @Slot()
     def ingest_data_to_gui(self):
-        experiment = Ingest_Data("first measurement!!!!!")
+        fileName = QtWidgets.QFileDialog.getOpenFileName(self, ("Import data"), "")
+        print(fileName)
+
+        experiment = Ingest_Data(fileName[0])
         self.data = experiment.returndata()
 
         self.ui.graphicsView.plot(self.data[0], self.data[1], pen=None, symbol="o")
@@ -37,17 +45,19 @@ class UserInterface(QtWidgets.QMainWindow):
 
     @Slot()
     def do_fit(self):
+        if not self.data:
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            msg.setText("Error")
+            msg.setInformativeText("Please import data before fitting.")
+            msg.setWindowTitle("Error")
+            msg.exec_()
+
         A_guess = self.ui.param1_guess_spinbox.value()
         B_guess = self.ui.param2_guess_spinbox.value()
         C_guess = self.ui.param3_guess_spinbox.value()
 
-        fit_data = gaussfit(
-            self.data[0],
-            self.data[1],
-            A_guess,
-            B_guess,
-            C_guess
-        )
+        fit_data = gaussfit(self.data[0], self.data[1], A_guess, B_guess, C_guess)
 
         self.fit_A = fit_data[0]
         self.fit_B = fit_data[1]
