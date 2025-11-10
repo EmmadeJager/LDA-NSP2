@@ -23,13 +23,13 @@
       <height>591</height>
      </rect>
     </property>
-    <widget class="QWidget" name="gauss_fit_pane" native="true">
+    <widget class="QWidget" name="gauss_fit_pane">
      <attribute name="title">
       <string>Gaussian Fit</string>
      </attribute>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QGraphicsView" name="graphicsView"/>
+       <widget class="PlotWidget" name="graphicsView"/>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -223,6 +223,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

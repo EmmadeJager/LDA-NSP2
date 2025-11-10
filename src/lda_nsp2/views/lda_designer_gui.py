@@ -15,10 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDoubleSpinBox, QFrame, QGraphicsView,
-    QHBoxLayout, QLabel, QMainWindow, QMenuBar,
-    QPushButton, QSizePolicy, QSpacerItem, QStatusBar,
-    QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QDoubleSpinBox, QFrame, QHBoxLayout,
+    QLabel, QMainWindow, QMenuBar, QPushButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
+    QVBoxLayout, QWidget)
+
+from pyqtgraph import PlotWidget
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -34,7 +36,7 @@ class Ui_MainWindow(object):
         self.gauss_fit_pane.setObjectName(u"gauss_fit_pane")
         self.horizontalLayout = QHBoxLayout(self.gauss_fit_pane)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.graphicsView = QGraphicsView(self.gauss_fit_pane)
+        self.graphicsView = PlotWidget(self.gauss_fit_pane)
         self.graphicsView.setObjectName(u"graphicsView")
 
         self.horizontalLayout.addWidget(self.graphicsView)
