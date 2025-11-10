@@ -190,6 +190,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
         self.x_measurement_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.x_measurement_spinbox.setObjectName(u"x_measurement_spinbox")
+        self.x_measurement_spinbox.setValue(97.000000000000000)
 
         self.horizontalLayout_9.addWidget(self.x_measurement_spinbox)
 
@@ -201,6 +202,7 @@ class Ui_MainWindow(object):
 
         self.x_uncertainty_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.x_uncertainty_spinbox.setObjectName(u"x_uncertainty_spinbox")
+        self.x_uncertainty_spinbox.setValue(1.000000000000000)
 
         self.horizontalLayout_9.addWidget(self.x_uncertainty_spinbox)
 
@@ -216,6 +218,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
         self.y_measurement_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.y_measurement_spinbox.setObjectName(u"y_measurement_spinbox")
+        self.y_measurement_spinbox.setValue(17.000000000000000)
 
         self.horizontalLayout_10.addWidget(self.y_measurement_spinbox)
 
@@ -227,6 +230,7 @@ class Ui_MainWindow(object):
 
         self.y_uncertainty_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.y_uncertainty_spinbox.setObjectName(u"y_uncertainty_spinbox")
+        self.y_uncertainty_spinbox.setValue(1.000000000000000)
 
         self.horizontalLayout_10.addWidget(self.y_uncertainty_spinbox)
 
@@ -242,6 +246,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
         self.z_measurement_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.z_measurement_spinbox.setObjectName(u"z_measurement_spinbox")
+        self.z_measurement_spinbox.setValue(2.500000000000000)
 
         self.horizontalLayout_11.addWidget(self.z_measurement_spinbox)
 
@@ -253,6 +258,7 @@ class Ui_MainWindow(object):
 
         self.z_uncertainty_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.z_uncertainty_spinbox.setObjectName(u"z_uncertainty_spinbox")
+        self.z_uncertainty_spinbox.setValue(1.000000000000000)
 
         self.horizontalLayout_11.addWidget(self.z_uncertainty_spinbox)
 
@@ -282,8 +288,31 @@ class Ui_MainWindow(object):
 
         self.velocity_lcd = QLCDNumber(self.horizontalLayoutWidget)
         self.velocity_lcd.setObjectName(u"velocity_lcd")
+        self.velocity_lcd.setFrameShape(QFrame.Shape.StyledPanel)
+        self.velocity_lcd.setFrameShadow(QFrame.Shadow.Plain)
+        self.velocity_lcd.setSmallDecimalPoint(False)
+        self.velocity_lcd.setDigitCount(15)
+        self.velocity_lcd.setSegmentStyle(QLCDNumber.SegmentStyle.Flat)
+        self.velocity_lcd.setProperty(u"value", 0.000000000000000)
 
         self.verticalLayout_3.addWidget(self.velocity_lcd)
+
+        self.label_14 = QLabel(self.horizontalLayoutWidget)
+        self.label_14.setObjectName(u"label_14")
+        self.label_14.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_3.addWidget(self.label_14)
+
+        self.velocity_lcd_uncertainty = QLCDNumber(self.horizontalLayoutWidget)
+        self.velocity_lcd_uncertainty.setObjectName(u"velocity_lcd_uncertainty")
+        self.velocity_lcd_uncertainty.setFrameShape(QFrame.Shape.StyledPanel)
+        self.velocity_lcd_uncertainty.setFrameShadow(QFrame.Shadow.Plain)
+        self.velocity_lcd_uncertainty.setSmallDecimalPoint(False)
+        self.velocity_lcd_uncertainty.setDigitCount(15)
+        self.velocity_lcd_uncertainty.setSegmentStyle(QLCDNumber.SegmentStyle.Flat)
+        self.velocity_lcd_uncertainty.setProperty(u"value", 0.000000000000000)
+
+        self.verticalLayout_3.addWidget(self.velocity_lcd_uncertainty)
 
         self.calculate_velocity_button = QPushButton(self.horizontalLayoutWidget)
         self.calculate_velocity_button.setObjectName(u"calculate_velocity_button")
@@ -368,6 +397,7 @@ class Ui_MainWindow(object):
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"+/-", None))
         self.refraction_correction_checkbox.setText(QCoreApplication.translate("MainWindow", u"Tube/Water Refraction Correction", None))
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"Refraction Coefficient:", None))
+        self.label_14.setText(QCoreApplication.translate("MainWindow", u"+/-", None))
         self.calculate_velocity_button.setText(QCoreApplication.translate("MainWindow", u"Calculate Water Velocity", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"Measurement Depth:", None))
         self.add_to_table_button.setText(QCoreApplication.translate("MainWindow", u"Add to parabola table", None))

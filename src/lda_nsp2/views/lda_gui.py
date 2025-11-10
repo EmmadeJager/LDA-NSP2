@@ -6,6 +6,7 @@ from PySide6.QtCore import Slot
 
 from lda_nsp2.data_ingestion import Ingest_Data
 from lda_nsp2.models.fitting import gaussfit
+from lda_nsp2.models.velocitycalculation import bereken_v
 from lda_nsp2.views.lda_designer_gui import Ui_MainWindow
 
 pg.setConfigOption("background", 0.2)
@@ -16,12 +17,15 @@ class UserInterface(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.data = None
+        self.fit_C = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
         self.ui.import_button.clicked.connect(self.ingest_data_to_gui)
         self.ui.fit_button.clicked.connect(self.do_fit)
+
+        self.ui.calculate_velocity_button.clicked.connect(self.calc_velocity)
 
         self.ui.param1_fit_output_label.setEnabled(False)
         self.ui.param2_fit_output_label.setEnabled(False)
@@ -46,12 +50,8 @@ class UserInterface(QtWidgets.QMainWindow):
     @Slot()
     def do_fit(self):
         if not self.data:
-            msg = QtWidgets.QMessageBox()
-            msg.setIcon(QtWidgets.QMessageBox.Critical)
-            msg.setText("Error")
-            msg.setInformativeText("Please import data before fitting.")
-            msg.setWindowTitle("Error")
-            msg.exec_()
+            self.error_modal("Please import data before fitting.")
+            return
 
         A_guess = self.ui.param1_guess_spinbox.value()
         B_guess = self.ui.param2_guess_spinbox.value()
@@ -73,6 +73,35 @@ class UserInterface(QtWidgets.QMainWindow):
 
         self.ui.graphicsView.plot(self.data[0], fit_data[3])
 
+    @Slot()
+    def calc_velocity(self):
+        if not self.fit_C:
+            self.error_modal("Please fit before calculating the velocity.")
+            return
+
+        x = self.ui.x_measurement_spinbox.value()
+        y = self.ui.y_measurement_spinbox.value()
+        z = self.ui.z_measurement_spinbox.value()
+        f = self.fit_C
+
+        x_err = self.ui.x_uncertainty_spinbox.value()
+        y_err = self.ui.y_uncertainty_spinbox.value()
+        z_err = self.ui.z_uncertainty_spinbox.value()
+        f_err = 100
+
+        results = bereken_v(x, y, z, f, x_err, y_err, z_err, f_err)
+
+        self.ui.velocity_lcd.display(results[2])
+        self.ui.velocity_lcd_uncertainty.display(results[3])
+
+    def error_modal(self, text):
+
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            msg.setText("Error")
+            msg.setInformativeText(text)
+            msg.setWindowTitle("Error")
+            msg.exec_()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
