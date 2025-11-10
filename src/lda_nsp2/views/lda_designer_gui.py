@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDoubleSpinBox, QFrame, QHBoxLayout,
-    QLabel, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QFrame,
+    QHBoxLayout, QLCDNumber, QLabel, QMainWindow,
+    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
+    QStatusBar, QTabWidget, QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 
@@ -123,6 +123,7 @@ class Ui_MainWindow(object):
         self.param3_guess_spinbox.setObjectName(u"param3_guess_spinbox")
         self.param3_guess_spinbox.setWrapping(False)
         self.param3_guess_spinbox.setReadOnly(False)
+        self.param3_guess_spinbox.setMaximum(99999999.000000000000000)
 
         self.horizontalLayout_5.addWidget(self.param3_guess_spinbox)
 
@@ -170,6 +171,163 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addLayout(self.verticalLayout)
 
         self.horizontalTabWidget.addTab(self.gauss_fit_pane, "")
+        self.velocity_pane = QWidget()
+        self.velocity_pane.setObjectName(u"velocity_pane")
+        self.horizontalLayoutWidget = QWidget(self.velocity_pane)
+        self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
+        self.horizontalLayoutWidget.setGeometry(QRect(9, -1, 971, 561))
+        self.horizontalLayout_6 = QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.label_7 = QLabel(self.horizontalLayoutWidget)
+        self.label_7.setObjectName(u"label_7")
+
+        self.verticalLayout_3.addWidget(self.label_7)
+
+        self.horizontalLayout_9 = QHBoxLayout()
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.x_measurement_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
+        self.x_measurement_spinbox.setObjectName(u"x_measurement_spinbox")
+
+        self.horizontalLayout_9.addWidget(self.x_measurement_spinbox)
+
+        self.label_9 = QLabel(self.horizontalLayoutWidget)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_9.addWidget(self.label_9)
+
+        self.x_uncertainty_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
+        self.x_uncertainty_spinbox.setObjectName(u"x_uncertainty_spinbox")
+
+        self.horizontalLayout_9.addWidget(self.x_uncertainty_spinbox)
+
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout_9)
+
+        self.label_8 = QLabel(self.horizontalLayoutWidget)
+        self.label_8.setObjectName(u"label_8")
+
+        self.verticalLayout_3.addWidget(self.label_8)
+
+        self.horizontalLayout_10 = QHBoxLayout()
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.y_measurement_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
+        self.y_measurement_spinbox.setObjectName(u"y_measurement_spinbox")
+
+        self.horizontalLayout_10.addWidget(self.y_measurement_spinbox)
+
+        self.label_10 = QLabel(self.horizontalLayoutWidget)
+        self.label_10.setObjectName(u"label_10")
+        self.label_10.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_10.addWidget(self.label_10)
+
+        self.y_uncertainty_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
+        self.y_uncertainty_spinbox.setObjectName(u"y_uncertainty_spinbox")
+
+        self.horizontalLayout_10.addWidget(self.y_uncertainty_spinbox)
+
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout_10)
+
+        self.label_6 = QLabel(self.horizontalLayoutWidget)
+        self.label_6.setObjectName(u"label_6")
+
+        self.verticalLayout_3.addWidget(self.label_6)
+
+        self.horizontalLayout_11 = QHBoxLayout()
+        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
+        self.z_measurement_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
+        self.z_measurement_spinbox.setObjectName(u"z_measurement_spinbox")
+
+        self.horizontalLayout_11.addWidget(self.z_measurement_spinbox)
+
+        self.label_11 = QLabel(self.horizontalLayoutWidget)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_11.addWidget(self.label_11)
+
+        self.z_uncertainty_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
+        self.z_uncertainty_spinbox.setObjectName(u"z_uncertainty_spinbox")
+
+        self.horizontalLayout_11.addWidget(self.z_uncertainty_spinbox)
+
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout_11)
+
+        self.refraction_correction_checkbox = QCheckBox(self.horizontalLayoutWidget)
+        self.refraction_correction_checkbox.setObjectName(u"refraction_correction_checkbox")
+
+        self.verticalLayout_3.addWidget(self.refraction_correction_checkbox)
+
+        self.label_12 = QLabel(self.horizontalLayoutWidget)
+        self.label_12.setObjectName(u"label_12")
+        self.label_12.setEnabled(False)
+
+        self.verticalLayout_3.addWidget(self.label_12)
+
+        self.refraction_coefficient_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
+        self.refraction_coefficient_spinbox.setObjectName(u"refraction_coefficient_spinbox")
+        self.refraction_coefficient_spinbox.setEnabled(False)
+
+        self.verticalLayout_3.addWidget(self.refraction_coefficient_spinbox)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_3.addItem(self.verticalSpacer_2)
+
+        self.velocity_lcd = QLCDNumber(self.horizontalLayoutWidget)
+        self.velocity_lcd.setObjectName(u"velocity_lcd")
+
+        self.verticalLayout_3.addWidget(self.velocity_lcd)
+
+        self.calculate_velocity_button = QPushButton(self.horizontalLayoutWidget)
+        self.calculate_velocity_button.setObjectName(u"calculate_velocity_button")
+
+        self.verticalLayout_3.addWidget(self.calculate_velocity_button)
+
+
+        self.horizontalLayout_6.addLayout(self.verticalLayout_3)
+
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_3)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.verticalLayout_2.addItem(self.horizontalSpacer)
+
+        self.horizontalLayout_12 = QHBoxLayout()
+        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.label_13 = QLabel(self.horizontalLayoutWidget)
+        self.label_13.setObjectName(u"label_13")
+        self.label_13.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout_12.addWidget(self.label_13)
+
+        self.measurement_depth_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
+        self.measurement_depth_spinbox.setObjectName(u"measurement_depth_spinbox")
+
+        self.horizontalLayout_12.addWidget(self.measurement_depth_spinbox)
+
+        self.add_to_table_button = QPushButton(self.horizontalLayoutWidget)
+        self.add_to_table_button.setObjectName(u"add_to_table_button")
+
+        self.horizontalLayout_12.addWidget(self.add_to_table_button)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_12)
+
+
+        self.horizontalLayout_6.addLayout(self.verticalLayout_2)
+
+        self.horizontalTabWidget.addTab(self.velocity_pane, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -180,6 +338,9 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
+
+        self.horizontalTabWidget.setCurrentIndex(1)
+
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
@@ -199,5 +360,17 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.horizontalTabWidget.setTabText(self.horizontalTabWidget.indexOf(self.gauss_fit_pane), QCoreApplication.translate("MainWindow", u"Gaussian Fit", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"X Measurement:", None))
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"+/-", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Y Measurement:", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"+/-", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Z Measurement:", None))
+        self.label_11.setText(QCoreApplication.translate("MainWindow", u"+/-", None))
+        self.refraction_correction_checkbox.setText(QCoreApplication.translate("MainWindow", u"Tube/Water Refraction Correction", None))
+        self.label_12.setText(QCoreApplication.translate("MainWindow", u"Refraction Coefficient:", None))
+        self.calculate_velocity_button.setText(QCoreApplication.translate("MainWindow", u"Calculate Water Velocity", None))
+        self.label_13.setText(QCoreApplication.translate("MainWindow", u"Measurement Depth:", None))
+        self.add_to_table_button.setText(QCoreApplication.translate("MainWindow", u"Add to parabola table", None))
+        self.horizontalTabWidget.setTabText(self.horizontalTabWidget.indexOf(self.velocity_pane), QCoreApplication.translate("MainWindow", u"Velocity Calulation", None))
     # retranslateUi
 
