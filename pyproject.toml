@@ -1,0 +1,20 @@
+[project]
+name = "lda-nsp2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "dorusv", email = "dorusfv@proton.me" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "pyqtgraph>=0.13.7",
+    "pyside6-essentials>=6.10.0",
+]
+
+[project.scripts]
+lda-nsp2 = "lda_nsp2:main"
+
+[build-system]
+requires = ["uv_build>=0.9.5,<0.10.0"]
+build-backend = "uv_build"
