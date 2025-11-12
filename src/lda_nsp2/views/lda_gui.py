@@ -5,7 +5,7 @@ from PySide6 import QtWidgets
 from PySide6.QtCore import Slot
 
 from lda_nsp2.data_ingestion import Ingest_Data
-from lda_nsp2.models.fitting import gaussfit
+from lda_nsp2.models.fitting import gaussfit, parabfit
 from lda_nsp2.models.velocitycalculation import bereken_v
 from lda_nsp2.views.lda_designer_gui import Ui_MainWindow
 
@@ -19,6 +19,14 @@ class UserInterface(QtWidgets.QMainWindow):
         self.data = None
         self.fit_C = None
 
+        self.parabola_list_velo = []
+        self.parabola_list_velo_uncertainty = []
+
+        self.parabola_list_depth = []
+
+        self.current_velocity_result = None
+        self.current_velocity_uncertainty = None
+
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
@@ -31,6 +39,16 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.param2_fit_output_label.setEnabled(False)
         self.ui.param3_fit_output_label.setEnabled(False)
 
+        self.ui.refraction_correction_checkbox.stateChanged.connect(
+            self.check_refraction_checkbox
+        )
+
+        self.ui.add_to_table_button.clicked.connect(self.add_to_table)
+        self.ui.parabola_fit_button.clicked.connect(self.parabola_fit)
+        self.ui.graphicsView.showGrid(x=True, y=True, alpha=0.9)
+        self.ui.graphicsView_2.showGrid(x=True, y=True, alpha=0.9)
+
+
     @Slot()
     def ingest_data_to_gui(self):
         fileName = QtWidgets.QFileDialog.getOpenFileName(self, ("Import data"), "")
@@ -39,6 +57,7 @@ class UserInterface(QtWidgets.QMainWindow):
         experiment = Ingest_Data(fileName[0])
         self.data = experiment.returndata()
 
+        self.ui.graphicsView.clear()
         self.ui.graphicsView.plot(self.data[0], self.data[1], pen=None, symbol="o")
 
         self.ui.param1_guess_spinbox.setValue(max(self.data[1]))
@@ -94,14 +113,58 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.velocity_lcd.display(results[2])
         self.ui.velocity_lcd_uncertainty.display(results[3])
 
-    def error_modal(self, text):
+        self.current_velocity_result = results[2]
+        self.current_velocity_uncertainty = results[3]
 
-            msg = QtWidgets.QMessageBox()
-            msg.setIcon(QtWidgets.QMessageBox.Critical)
-            msg.setText("Error")
-            msg.setInformativeText(text)
-            msg.setWindowTitle("Error")
-            msg.exec_()
+    def error_modal(self, text):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Critical)
+        msg.setText("Error")
+        msg.setInformativeText(text)
+        msg.setWindowTitle("Error")
+        msg.exec_()
+
+    @Slot()
+    def check_refraction_checkbox(self):
+        self.ui.refraction_coefficient_spinbox.setEnabled(
+            self.ui.refraction_correction_checkbox.isChecked()
+        )
+        self.ui.refraction_coefficient_spinbox.setEnabled(
+            self.ui.refraction_correction_checkbox.isChecked()
+        )
+
+    @Slot()
+    def add_to_table(self):
+        if not self.current_velocity_result:
+            self.error_modal("Please calculate measurement before adding to table.")
+            return
+        # for i in range(0, 10):
+        #     if self.ui.tableWidget.item
+
+        # self.ui.tableWidget.setItem()
+        self.parabola_list_velo.append(self.current_velocity_result)
+        self.parabola_list_velo_uncertainty.append(self.current_velocity_uncertainty)
+
+        self.parabola_list_depth.append(self.ui.measurement_depth_spinbox.value())
+
+        self.ui.graphicsView_2.clear()
+        self.ui.graphicsView_2.plot(
+            self.parabola_list_depth, self.parabola_list_velo, pen=None, symbol="o"
+        )
+
+    @Slot()
+    def parabola_fit(self):
+        results = parabfit(self.parabola_list_depth, self.parabola_list_velo, -1, -2, 10)
+        parab_fit_A, parab_fit_B, parab_fit_C, parab_fit_Y, parab_fit_X = results
+
+
+
+        self.ui.graphicsView_2.plot(
+            parab_fit_X, parab_fit_Y
+        )
+
+        print(parab_fit_A, parab_fit_B, parab_fit_C)
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
