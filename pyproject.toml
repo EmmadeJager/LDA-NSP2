@@ -3,14 +3,9 @@ name = "lda-nsp2"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "dorusv", email = "dorusfv@proton.me" }
-]
+authors = [{ name = "dorusv", email = "dorusfv@proton.me" }]
 requires-python = ">=3.13"
-dependencies = [
-    "pyqtgraph>=0.13.7",
-    "pyside6-essentials>=6.10.0",
-]
+dependencies = ["pyqtgraph>=0.13.7", "pyside6-essentials>=6.10.0"]
 
 [project.scripts]
 lda-nsp2 = "lda_nsp2:main"
@@ -18,3 +13,9 @@ lda-nsp2 = "lda_nsp2:main"
 [build-system]
 requires = ["uv_build>=0.9.5,<0.10.0"]
 build-backend = "uv_build"
+
+[tool.poe.tasks.compile]
+shell = """
+pyside6-uic src/lda_nsp2/views/lda_designer_gui.ui --output src/lda_nsp2/views/lda_designer_gui.py
+"""
+interpreter = ["posix", "powershell"]

@@ -16,9 +16,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QFrame,
-    QHBoxLayout, QLCDNumber, QLabel, QMainWindow,
-    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
-    QStatusBar, QTabWidget, QVBoxLayout, QWidget)
+    QHBoxLayout, QHeaderView, QLCDNumber, QLabel,
+    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
+    QSpacerItem, QStatusBar, QTabWidget, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 
@@ -190,6 +191,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
         self.x_measurement_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.x_measurement_spinbox.setObjectName(u"x_measurement_spinbox")
+        self.x_measurement_spinbox.setMaximum(200.000000000000000)
         self.x_measurement_spinbox.setValue(97.000000000000000)
 
         self.horizontalLayout_9.addWidget(self.x_measurement_spinbox)
@@ -218,6 +220,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
         self.y_measurement_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.y_measurement_spinbox.setObjectName(u"y_measurement_spinbox")
+        self.y_measurement_spinbox.setMaximum(200.000000000000000)
         self.y_measurement_spinbox.setValue(17.000000000000000)
 
         self.horizontalLayout_10.addWidget(self.y_measurement_spinbox)
@@ -246,6 +249,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
         self.z_measurement_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.z_measurement_spinbox.setObjectName(u"z_measurement_spinbox")
+        self.z_measurement_spinbox.setMaximum(200.000000000000000)
         self.z_measurement_spinbox.setValue(2.500000000000000)
 
         self.horizontalLayout_11.addWidget(self.z_measurement_spinbox)
@@ -279,6 +283,7 @@ class Ui_MainWindow(object):
         self.refraction_coefficient_spinbox = QDoubleSpinBox(self.horizontalLayoutWidget)
         self.refraction_coefficient_spinbox.setObjectName(u"refraction_coefficient_spinbox")
         self.refraction_coefficient_spinbox.setEnabled(False)
+        self.refraction_coefficient_spinbox.setMaximum(200.000000000000000)
 
         self.verticalLayout_3.addWidget(self.refraction_coefficient_spinbox)
 
@@ -324,9 +329,50 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.horizontalLayout_8 = QHBoxLayout()
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.verticalLayout_4 = QVBoxLayout()
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.label_15 = QLabel(self.horizontalLayoutWidget)
+        self.label_15.setObjectName(u"label_15")
 
-        self.verticalLayout_2.addItem(self.verticalSpacer_3)
+        self.verticalLayout_4.addWidget(self.label_15)
+
+        self.tableWidget = QTableWidget(self.horizontalLayoutWidget)
+        if (self.tableWidget.columnCount() < 2):
+            self.tableWidget.setColumnCount(2)
+        __qtablewidgetitem = QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(0, __qtablewidgetitem)
+        __qtablewidgetitem1 = QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(1, __qtablewidgetitem1)
+        if (self.tableWidget.rowCount() < 10):
+            self.tableWidget.setRowCount(10)
+        __qtablewidgetitem2 = QTableWidgetItem()
+        self.tableWidget.setItem(0, 0, __qtablewidgetitem2)
+        self.tableWidget.setObjectName(u"tableWidget")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.tableWidget.sizePolicy().hasHeightForWidth())
+        self.tableWidget.setSizePolicy(sizePolicy)
+
+        self.verticalLayout_4.addWidget(self.tableWidget)
+
+        self.parabola_fit_button = QPushButton(self.horizontalLayoutWidget)
+        self.parabola_fit_button.setObjectName(u"parabola_fit_button")
+
+        self.verticalLayout_4.addWidget(self.parabola_fit_button)
+
+
+        self.horizontalLayout_8.addLayout(self.verticalLayout_4)
+
+        self.graphicsView_2 = PlotWidget(self.horizontalLayoutWidget)
+        self.graphicsView_2.setObjectName(u"graphicsView_2")
+
+        self.horizontalLayout_8.addWidget(self.graphicsView_2)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_8)
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -399,6 +445,17 @@ class Ui_MainWindow(object):
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"Refraction Coefficient:", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"+/-", None))
         self.calculate_velocity_button.setText(QCoreApplication.translate("MainWindow", u"Calculate Water Velocity", None))
+        self.label_15.setText(QCoreApplication.translate("MainWindow", u"Parabola Table", None))
+        ___qtablewidgetitem = self.tableWidget.horizontalHeaderItem(0)
+        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Depth", None));
+        ___qtablewidgetitem1 = self.tableWidget.horizontalHeaderItem(1)
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Speed", None));
+
+        __sortingEnabled = self.tableWidget.isSortingEnabled()
+        self.tableWidget.setSortingEnabled(False)
+        self.tableWidget.setSortingEnabled(__sortingEnabled)
+
+        self.parabola_fit_button.setText(QCoreApplication.translate("MainWindow", u"Do Fit", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"Measurement Depth:", None))
         self.add_to_table_button.setText(QCoreApplication.translate("MainWindow", u"Add to parabola table", None))
         self.horizontalTabWidget.setTabText(self.horizontalTabWidget.indexOf(self.velocity_pane), QCoreApplication.translate("MainWindow", u"Velocity Calulation", None))
