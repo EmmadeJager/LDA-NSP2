@@ -8,7 +8,7 @@ class Ingest_Data:
         Returns:
             tuple: tuple of lists with both columns of the datafile in their own respective lists
         """
-        with open(data_file, "r") as dataFile:
+        with open(data_file[0], "r") as dataFile:
             data = [line.split() for line in dataFile]
             data.pop(0)
         self.x = []
@@ -22,3 +22,27 @@ class Ingest_Data:
         
     def returndata(self):
         return self.x, self.y
+
+
+class Ingest_Data_1D:
+    def __init__(self, data_file):
+        """Ingest data from labview export
+
+        Args:
+            data_file (str): name of the to be ingested file
+
+        Returns:
+            tuple: tuple of lists with both columns of the datafile in their own respective lists
+        """
+        with open(data_file, "r") as dataFile:
+            data = [line.split() for line in dataFile]
+        
+        self.one_d = []
+
+        for line in data:
+            line = [i.replace(",", ".") for i in line]
+            self.one_d.append(float(line[0]))
+
+        
+    def returndata(self):
+        return self.one_d

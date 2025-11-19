@@ -22,5 +22,6 @@ build-backend = "uv_build"
 [tool.poe.tasks.compile]
 shell = """
 pyside6-uic src/lda_nsp2/views/lda_designer_gui.ui --output src/lda_nsp2/views/lda_designer_gui.py
+pyside6-uic src/lda_nsp2/views/lda_vortex_histogram_edit_dialog.ui --output src/lda_nsp2/views/lda_vortex_histogram_edit_dialog.py
 """
 interpreter = ["posix", "powershell"]

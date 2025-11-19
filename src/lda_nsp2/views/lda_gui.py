@@ -3,11 +3,14 @@ import sys
 import pyqtgraph as pg
 from PySide6 import QtWidgets
 from PySide6.QtCore import Slot
+from PySide6.QtWidgets import QListWidgetItem, QDialog
 
-from lda_nsp2.data_ingestion import Ingest_Data
+import numpy as np
+from lda_nsp2.data_ingestion import Ingest_Data, Ingest_Data_1D
 from lda_nsp2.models.fitting import gaussfit, parabfit
 from lda_nsp2.models.velocitycalculation import bereken_v
 from lda_nsp2.views.lda_designer_gui import Ui_MainWindow
+from lda_nsp2.views.lda_vortex_histogram_edit_dialog import Ui_Dialog
 
 pg.setConfigOption("background", 0.2)
 pg.setConfigOption("foreground", 0.5)
@@ -47,6 +50,23 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.parabola_fit_button.clicked.connect(self.parabola_fit)
         self.ui.graphicsView.showGrid(x=True, y=True, alpha=0.9)
         self.ui.graphicsView_2.showGrid(x=True, y=True, alpha=0.9)
+        # self.ui.graphicsView_3.showGrid(x=True, y=True, alpha=0.9)
+
+        # Initialise a hashtable for 200 different vortex measurements
+        self.vortex_master_data = []
+        for i in range(200):
+            self.vortex_master_data.append(None)
+
+        self.currently_selected_vortex_histogram = None
+
+        # Vortex Button Bindings
+        self.ui.ImportSingleButton.clicked.connect(self.ingest_vortex_histogram)
+        self.ui.ImportMultipleButton.clicked.connect(self.ingest_multiple_vortex_histograms)
+        self.ui.DeleteSelectedHistogramButton.clicked.connect(self.delete_vortex_histogram)
+        self.ui.EditSelectedHistogramButton.clicked.connect(self.edit_vortex_histogram)
+
+        self.ui.listWidget.currentItemChanged.connect(self.redraw_vortex_histogram)
+
 
 
     @Slot()
@@ -164,6 +184,126 @@ class UserInterface(QtWidgets.QMainWindow):
         )
 
         print(parab_fit_A, parab_fit_B, parab_fit_C)
+
+    @Slot()
+    def ingest_vortex_histogram(self):
+        # Open file-choosing modal
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, ("Import data"), "")
+        print(fileName)
+
+        # Ingest data and make it a histogram
+        vals = Ingest_Data_1D(fileName)
+        hist_data = vals.returndata()
+        y,x = np.histogram(hist_data, bins=32)
+
+        # Graph newly imported Histogram
+        self.ui.graphicsView_3.clear()
+        bgi = pg.BarGraphItem(x0=x[:-1], x1=x[1:], height=y, pen='w', brush=(16,3,0,255))
+        self.ui.graphicsView_3.addItem(bgi)
+
+        # Name of file without preceding path
+        fileNameWOPath = fileName.split("/")[-1]
+
+        # Add Name of file to list widget
+        QListWidgetItem((fileNameWOPath), self.ui.listWidget)
+
+        # save histogram to memory
+        hashTableAddress = int(list(fileNameWOPath)[-2] + list(fileNameWOPath)[-1])
+        self.vortex_master_data[hashTableAddress] = [x, y]
+
+    @Slot()
+    def ingest_multiple_vortex_histograms(self):
+        # Open file-choosing modal
+        fileNames = QtWidgets.QFileDialog.getOpenFileNames(self, ("Import data"), "")
+        
+        for fileName in fileNames[0]:
+
+            # Ingest data and make it a histogram
+            vals = Ingest_Data_1D(fileName)
+            hist_data = vals.returndata()
+            y,x = np.histogram(hist_data, bins=32)
+
+            # Graph newly imported Histogram
+            self.ui.graphicsView_3.clear()
+            bgi = pg.BarGraphItem(x0=x[:-1], x1=x[1:], height=y, pen='w', brush=(16,3,0,255))
+            self.ui.graphicsView_3.addItem(bgi)
+
+            # Name of file without preceding path
+            fileNameWOPath = fileName.split("/")[-1]
+
+            # Add Name of file to list widget
+            QListWidgetItem((fileNameWOPath), self.ui.listWidget)
+
+            fileCoords = fileNameWOPath.split(" ")[0]
+            fileCoords = list(fileCoords)[1:-1]
+            fileCoordsNumbers = ""
+            for i in fileCoords:
+                fileCoordsNumbers += i
+
+            fileCoords = [int(i) for i in fileCoordsNumbers.split(",")]
+
+            x = 50 + 22 + 8.5 * fileCoords[1]
+            y = 18.5
+            if fileCoords[1] == 0:
+                z = 6.5
+            elif fileCoords[1] == 1:
+                z = 5.5
+            elif fileCoords[1] == 2:
+                z = 4
+            elif fileCoords[1] == 3:
+                z = 2.5
+            elif fileCoords[1] == 4:
+                z = 1.5
+
+            fileCoords.append(x)
+            fileCoords.append(y)
+            fileCoords.append(z)
+
+            # save histogram to memory
+            hashTableAddress = int(list(fileNameWOPath)[-2] + list(fileNameWOPath)[-1])
+            self.vortex_master_data[hashTableAddress] = [[x, y], fileCoords]
+            self.currently_selected_vortex_histogram = hashTableAddress
+
+
+
+    @Slot()
+    def redraw_vortex_histogram(self):
+        datasetName = self.ui.listWidget.currentItem().text()
+
+        datasetIndex = int(list(datasetName)[-2] + list(datasetName)[-1])
+        self.currently_selected_vortex_histogram = datasetIndex
+
+        HistogramList = self.vortex_master_data[datasetIndex]
+        x = HistogramList[0][0]
+        y = HistogramList[0][1]
+
+        # Graph selected Histogram
+        self.ui.graphicsView_3.clear()
+        bgi = pg.BarGraphItem(x0=x[:-1], x1=x[1:], height=y, pen='w', brush=(16,3,0,255))
+        self.ui.graphicsView_3.addItem(bgi)
+
+    @Slot()
+    def delete_vortex_histogram(self):
+        self.vortex_master_data[self.currently_selected_vortex_histogram] = None
+
+        currentRow = self.ui.listWidget.currentRow()
+        self.ui.listWidget.takeItem(currentRow)
+
+    def edit_vortex_histogram(self):
+        dlg = HistogramEditDialog(self)
+        dlg.exec()
+
+
+
+
+class HistogramEditDialog(Ui_Dialog, QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+    
+    # def add_values(self, x_value, y_value, z_value, x_list, y_list):
+    #     self.s = 
+
 
 
 def main():
