@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDialog, QDoubleSpinBox, QFrame,
-    QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
-    QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialog, QDialogButtonBox,
+    QDoubleSpinBox, QFrame, QHBoxLayout, QLabel,
+    QListWidget, QListWidgetItem, QSizePolicy, QSpacerItem,
+    QVBoxLayout, QWidget)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -99,16 +99,12 @@ class Ui_Dialog(object):
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_4)
 
-        self.edit_histogram_save_button = QPushButton(self.verticalFrame)
-        self.edit_histogram_save_button.setObjectName(u"edit_histogram_save_button")
-        self.edit_histogram_save_button.setEnabled(False)
+        self.histogram_edit_buttonbox = QDialogButtonBox(self.verticalFrame)
+        self.histogram_edit_buttonbox.setObjectName(u"histogram_edit_buttonbox")
+        self.histogram_edit_buttonbox.setStandardButtons(QDialogButtonBox.StandardButton.Cancel|QDialogButtonBox.StandardButton.Ok)
+        self.histogram_edit_buttonbox.setCenterButtons(False)
 
-        self.horizontalLayout_4.addWidget(self.edit_histogram_save_button)
-
-        self.edit_histogram_cancel_button = QPushButton(self.verticalFrame)
-        self.edit_histogram_cancel_button.setObjectName(u"edit_histogram_cancel_button")
-
-        self.horizontalLayout_4.addWidget(self.edit_histogram_cancel_button)
+        self.horizontalLayout_4.addWidget(self.histogram_edit_buttonbox)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_4)
@@ -124,7 +120,5 @@ class Ui_Dialog(object):
         self.label.setText(QCoreApplication.translate("Dialog", u"X Measurement:", None))
         self.label_3.setText(QCoreApplication.translate("Dialog", u"Y Measurement:", None))
         self.label_2.setText(QCoreApplication.translate("Dialog", u"Z Measurement:", None))
-        self.edit_histogram_save_button.setText(QCoreApplication.translate("Dialog", u"Save", None))
-        self.edit_histogram_cancel_button.setText(QCoreApplication.translate("Dialog", u"Cancel", None))
     # retranslateUi
 

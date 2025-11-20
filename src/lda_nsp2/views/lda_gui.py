@@ -11,6 +11,7 @@ from lda_nsp2.models.fitting import gaussfit, parabfit
 from lda_nsp2.models.velocitycalculation import bereken_v
 from lda_nsp2.views.lda_designer_gui import Ui_MainWindow
 from lda_nsp2.views.lda_vortex_histogram_edit_dialog import Ui_Dialog
+from lda_nsp2.models.filters import lowpass, highpass
 
 pg.setConfigOption("background", 0.2)
 pg.setConfigOption("foreground", 0.5)
@@ -61,13 +62,29 @@ class UserInterface(QtWidgets.QMainWindow):
 
         # Vortex Button Bindings
         self.ui.ImportSingleButton.clicked.connect(self.ingest_vortex_histogram)
-        self.ui.ImportMultipleButton.clicked.connect(self.ingest_multiple_vortex_histograms)
-        self.ui.DeleteSelectedHistogramButton.clicked.connect(self.delete_vortex_histogram)
+        self.ui.ImportMultipleButton.clicked.connect(
+            self.ingest_multiple_vortex_histograms
+        )
+        self.ui.DeleteSelectedHistogramButton.clicked.connect(
+            self.delete_vortex_histogram
+        )
         self.ui.EditSelectedHistogramButton.clicked.connect(self.edit_vortex_histogram)
 
+        self.ui.LowPassFilterCheckBox.stateChanged.connect(self.applylowpassfilter)
+        self.ui.LowPassFilterK_value_Spinbox.valueChanged.connect(
+            self.applylowpassfilter
+        )
+        self.ui.LowPassFilterSpinbox.valueChanged.connect(self.applylowpassfilter)
+
+        self.ui.HighPassFilterCheckBox.stateChanged.connect(self.applyHighpassfilter)
+        self.ui.HighPassFilterK_value_Spinbox.valueChanged.connect(
+            self.applyHighpassfilter
+        )
+        self.ui.HighPassFilterSpinbox.valueChanged.connect(self.applyHighpassfilter)
+
+        self.ui.SaveHistogramButton.clicked.connect(self.saveCurrentHistogram)
+
         self.ui.listWidget.currentItemChanged.connect(self.redraw_vortex_histogram)
-
-
 
     @Slot()
     def ingest_data_to_gui(self):
@@ -174,14 +191,12 @@ class UserInterface(QtWidgets.QMainWindow):
 
     @Slot()
     def parabola_fit(self):
-        results = parabfit(self.parabola_list_depth, self.parabola_list_velo, -1, -2, 10)
+        results = parabfit(
+            self.parabola_list_depth, self.parabola_list_velo, -1, -2, 10
+        )
         parab_fit_A, parab_fit_B, parab_fit_C, parab_fit_Y, parab_fit_X = results
 
-
-
-        self.ui.graphicsView_2.plot(
-            parab_fit_X, parab_fit_Y
-        )
+        self.ui.graphicsView_2.plot(parab_fit_X, parab_fit_Y)
 
         print(parab_fit_A, parab_fit_B, parab_fit_C)
 
@@ -194,12 +209,12 @@ class UserInterface(QtWidgets.QMainWindow):
         # Ingest data and make it a histogram
         vals = Ingest_Data_1D(fileName)
         hist_data = vals.returndata()
-        y,x = np.histogram(hist_data, bins=32)
+        y, x = np.histogram(hist_data, bins=32)
 
-        # Graph newly imported Histogram
-        self.ui.graphicsView_3.clear()
-        bgi = pg.BarGraphItem(x0=x[:-1], x1=x[1:], height=y, pen='w', brush=(16,3,0,255))
-        self.ui.graphicsView_3.addItem(bgi)
+        self.current_histogram_x = x
+        self.current_histogram_y = y
+
+        self.plothistogram(x, y)
 
         # Name of file without preceding path
         fileNameWOPath = fileName.split("/")[-1]
@@ -207,26 +222,50 @@ class UserInterface(QtWidgets.QMainWindow):
         # Add Name of file to list widget
         QListWidgetItem((fileNameWOPath), self.ui.listWidget)
 
+        fileCoords = fileNameWOPath.split(" ")[0]
+        fileCoords = list(fileCoords)[1:-1]
+        fileCoordsNumbers = ""
+        for i in fileCoords:
+            fileCoordsNumbers += i
+
+        fileCoords = [int(i) for i in fileCoordsNumbers.split(",")]
+
+        x_value = 50 + 22 + 8.5 * fileCoords[1]
+        y_value = 18.5
+        if fileCoords[1] == 0:
+            z = 6.5
+        elif fileCoords[1] == 1:
+            z = 5.5
+        elif fileCoords[1] == 2:
+            z = 4
+        elif fileCoords[1] == 3:
+            z = 2.5
+        elif fileCoords[1] == 4:
+            z = 1.5
+
+        fileCoords.append(x_value)
+        fileCoords.append(y_value)
+        fileCoords.append(z)
+
         # save histogram to memory
         hashTableAddress = int(list(fileNameWOPath)[-2] + list(fileNameWOPath)[-1])
-        self.vortex_master_data[hashTableAddress] = [x, y]
+        self.vortex_master_data[hashTableAddress] = [[x, y], fileCoords]
 
     @Slot()
     def ingest_multiple_vortex_histograms(self):
         # Open file-choosing modal
         fileNames = QtWidgets.QFileDialog.getOpenFileNames(self, ("Import data"), "")
-        
-        for fileName in fileNames[0]:
 
+        for fileName in fileNames[0]:
             # Ingest data and make it a histogram
             vals = Ingest_Data_1D(fileName)
             hist_data = vals.returndata()
-            y,x = np.histogram(hist_data, bins=32)
+            y, x = np.histogram(hist_data, bins=32)
 
-            # Graph newly imported Histogram
-            self.ui.graphicsView_3.clear()
-            bgi = pg.BarGraphItem(x0=x[:-1], x1=x[1:], height=y, pen='w', brush=(16,3,0,255))
-            self.ui.graphicsView_3.addItem(bgi)
+            self.current_histogram_x = x
+            self.current_histogram_y = y
+
+            self.plothistogram(x, y)
 
             # Name of file without preceding path
             fileNameWOPath = fileName.split("/")[-1]
@@ -242,8 +281,8 @@ class UserInterface(QtWidgets.QMainWindow):
 
             fileCoords = [int(i) for i in fileCoordsNumbers.split(",")]
 
-            x = 50 + 22 + 8.5 * fileCoords[1]
-            y = 18.5
+            x_value = 50 + 22 + 8.5 * fileCoords[1]
+            y_value = 18.5
             if fileCoords[1] == 0:
                 z = 6.5
             elif fileCoords[1] == 1:
@@ -255,8 +294,8 @@ class UserInterface(QtWidgets.QMainWindow):
             elif fileCoords[1] == 4:
                 z = 1.5
 
-            fileCoords.append(x)
-            fileCoords.append(y)
+            fileCoords.append(x_value)
+            fileCoords.append(y_value)
             fileCoords.append(z)
 
             # save histogram to memory
@@ -264,10 +303,8 @@ class UserInterface(QtWidgets.QMainWindow):
             self.vortex_master_data[hashTableAddress] = [[x, y], fileCoords]
             self.currently_selected_vortex_histogram = hashTableAddress
 
-
-
     @Slot()
-    def redraw_vortex_histogram(self):
+    def redraw_vortex_histogram(self, reset_filters=True):
         datasetName = self.ui.listWidget.currentItem().text()
 
         datasetIndex = int(list(datasetName)[-2] + list(datasetName)[-1])
@@ -277,10 +314,10 @@ class UserInterface(QtWidgets.QMainWindow):
         x = HistogramList[0][0]
         y = HistogramList[0][1]
 
-        # Graph selected Histogram
-        self.ui.graphicsView_3.clear()
-        bgi = pg.BarGraphItem(x0=x[:-1], x1=x[1:], height=y, pen='w', brush=(16,3,0,255))
-        self.ui.graphicsView_3.addItem(bgi)
+        self.current_histogram_x = x
+        self.current_histogram_y = y
+
+        self.plothistogram(x, y, reset_filters)
 
     @Slot()
     def delete_vortex_histogram(self):
@@ -293,17 +330,211 @@ class UserInterface(QtWidgets.QMainWindow):
         dlg = HistogramEditDialog(self)
         dlg.exec()
 
+    def plothistogram(self, x, y, reset_filters=True):
+        # set plot limits
+        self.ui.HistoStartRangeSpinbox.setValue(x[0])
+        self.ui.HistoEndRangeSpinbox.setValue(x[-1])
 
+        if reset_filters:
+            # set filter frequencies
+            self.ui.HighPassFilterSpinbox.setValue(x[0])
+            self.ui.LowPassFilterSpinbox.setValue(x[-1])
+            self.ui.HighPassFilterCheckBox.setChecked(False)
+            self.ui.LowPassFilterCheckBox.setChecked(False)
+
+        # Graph selected Histogram
+        self.ui.graphicsView_3.clear()
+        self.ui.graphicsView_3.setXRange(x[0], x[-1], padding=0.05)
+        bgi = pg.BarGraphItem(
+            x0=x[:-1], x1=x[1:], height=y, pen="w", brush=(16, 3, 0, 255)
+        )
+        self.ui.graphicsView_3.addItem(bgi)
+
+    def applylowpassfilter(self):
+        if self.ui.LowPassFilterCheckBox.isChecked():
+            x = self.current_histogram_x
+            y = self.current_histogram_y
+
+            # filter histogram according to high and lowpass filter
+            filtered_y = []
+            for i, j in zip(x, y):
+                # apply lowpass
+                filtered_y_value = j * lowpass(
+                    i,
+                    self.ui.LowPassFilterSpinbox.value(),
+                    self.ui.LowPassFilterK_value_Spinbox.value(),
+                )
+
+                # apply highpass if enabled
+                if self.ui.HighPassFilterCheckBox.isChecked():
+                    filtered_y_value = filtered_y_value * highpass(
+                        i,
+                        self.ui.HighPassFilterSpinbox.value(),
+                        self.ui.HighPassFilterK_value_Spinbox.value(),
+                    )
+                filtered_y.append(filtered_y_value)
+
+            # generate plot of lowpass function
+            filterplot_range = np.arange(x[0], x[-1], 1)
+            filterplot_y = []
+            for i in filterplot_range:
+                filterplot_y.append(
+                    lowpass(
+                        i,
+                        self.ui.LowPassFilterSpinbox.value(),
+                        self.ui.LowPassFilterK_value_Spinbox.value(),
+                    )
+                    * max(y)
+                )
+
+            # plot histogram and lowpass function
+            self.plothistogram(x, filtered_y, False)
+            self.current_histogram_filtered_y = filtered_y
+            self.ui.graphicsView_3.plot(filterplot_range, filterplot_y, pen="r")
+
+            # if highpass is enabled also plot that function
+            if self.ui.HighPassFilterCheckBox.isChecked():
+                filterplot_y_highpass = []
+                for i in filterplot_range:
+                    filterplot_y_highpass.append(
+                        highpass(
+                            i,
+                            self.ui.HighPassFilterSpinbox.value(),
+                            self.ui.HighPassFilterK_value_Spinbox.value(),
+                        )
+                        * max(y)
+                    )
+
+                self.ui.graphicsView_3.plot(
+                    filterplot_range, filterplot_y_highpass, pen="g"
+                )
+        else:
+            # if lowpass is disabled but highpass is enabled redraw that highpass function
+            self.redraw_vortex_histogram(False)
+            if self.ui.HighPassFilterCheckBox.isChecked():
+                filterplot_y_highpass = []
+                for i in filterplot_range:
+                    filterplot_y_highpass.append(
+                        highpass(
+                            i,
+                            self.ui.HighPassFilterSpinbox.value(),
+                            self.ui.HighPassFilterK_value_Spinbox.value(),
+                        )
+                        * max(y)
+                    )
+
+                self.ui.graphicsView_3.plot(
+                    filterplot_range, filterplot_y_highpass, pen="g"
+                )
+
+    def applyHighpassfilter(self):
+        if self.ui.HighPassFilterCheckBox.isChecked():
+            x = self.current_histogram_x
+            y = self.current_histogram_y
+
+            # filter histogram according to high and lowpass filter
+            filtered_y = []
+            for i, j in zip(x, y):
+                # apply highpass filter
+                filtered_y_value = j * highpass(
+                    i,
+                    self.ui.HighPassFilterSpinbox.value(),
+                    self.ui.HighPassFilterK_value_Spinbox.value(),
+                )
+
+                # apply lowpass if enabled
+                if self.ui.LowPassFilterCheckBox.isChecked():
+                    filtered_y_value = filtered_y_value * lowpass(
+                        i,
+                        self.ui.LowPassFilterSpinbox.value(),
+                        self.ui.LowPassFilterK_value_Spinbox.value(),
+                    )
+                filtered_y.append(filtered_y_value)
+
+            # generate plot of highpass function
+            filterplot_range = np.arange(x[0], x[-1], 1)
+            filterplot_y = []
+            for i in filterplot_range:
+                filterplot_y.append(
+                    highpass(
+                        i,
+                        self.ui.HighPassFilterSpinbox.value(),
+                        self.ui.HighPassFilterK_value_Spinbox.value(),
+                    )
+                    * max(y)
+                )
+
+            # plot histogram and highpass function
+            self.plothistogram(x, filtered_y, False)
+            self.current_histogram_filtered_y = filtered_y
+            self.ui.graphicsView_3.plot(filterplot_range, filterplot_y, pen="g")
+
+            # if lowpass is enabled also plot that function
+            if self.ui.LowPassFilterCheckBox.isChecked():
+                filterplot_y_lowpass = []
+                for i in filterplot_range:
+                    filterplot_y_lowpass.append(
+                        lowpass(
+                            i,
+                            self.ui.LowPassFilterSpinbox.value(),
+                            self.ui.LowPassFilterK_value_Spinbox.value(),
+                        )
+                        * max(y)
+                    )
+
+                self.ui.graphicsView_3.plot(
+                    filterplot_range, filterplot_y_lowpass, pen="r"
+                )
+        else:
+            # if highpass is disabled but lowpass is enabled redraw that lowpass function
+            self.redraw_vortex_histogram(False)
+            if self.ui.LowPassFilterCheckBox.isChecked():
+                filterplot_y_lowpass = []
+                for i in filterplot_range:
+                    filterplot_y_lowpass.append(
+                        lowpass(
+                            i,
+                            self.ui.LowPassFilterSpinbox.value(),
+                            self.ui.LowPassFilterK_value_Spinbox.value(),
+                        )
+                        * max(y)
+                    )
+
+                self.ui.graphicsView_3.plot(
+                    filterplot_range, filterplot_y_lowpass, pen="r"
+                )
+
+    @Slot()
+    def saveCurrentHistogram(self):
+        index = self.currently_selected_vortex_histogram
+
+        self.current_histogram_y = self.current_histogram_filtered_y
+        self.vortex_master_data[index][0][1] = self.current_histogram_filtered_y
+
+    @Slot()
+    def fitAllHistograms(self):
+        for histogram in self.vortex_master_data:
+            if histogram:
+                x = histogram[0][0]
+                y = histogram[0][1]
+                metadata = histogram[1]
+
+                A_Guess = max(y)
+                B_Guess = 200
+                C_Guess = x[self.data[1].index(max(y))]
+
+                fit_data = gaussfit(
+                    x, y, A_guess=A_Guess, B_guess=B_Guess, C_guess=C_Guess
+                )
 
 
 class HistogramEditDialog(Ui_Dialog, QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-    
-    # def add_values(self, x_value, y_value, z_value, x_list, y_list):
-    #     self.s = 
 
+    # def add_values(self, x_value, y_value, z_value, x_list, y_list):
+    #     self.s =
 
 
 def main():

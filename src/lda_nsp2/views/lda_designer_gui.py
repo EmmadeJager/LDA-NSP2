@@ -15,12 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QFrame,
-    QHBoxLayout, QHeaderView, QLCDNumber, QLabel,
-    QLayout, QListWidget, QListWidgetItem, QMainWindow,
-    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
-    QSpinBox, QStatusBar, QTabWidget, QTableWidget,
-    QTableWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
+    QFrame, QHBoxLayout, QHeaderView, QLCDNumber,
+    QLabel, QLayout, QListWidget, QListWidgetItem,
+    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
+    QSpacerItem, QSpinBox, QStatusBar, QTabWidget,
+    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 
@@ -28,12 +28,12 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1009, 663)
+        MainWindow.resize(1013, 664)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalTabWidget = QTabWidget(self.centralwidget)
         self.horizontalTabWidget.setObjectName(u"horizontalTabWidget")
-        self.horizontalTabWidget.setGeometry(QRect(9, 9, 991, 591))
+        self.horizontalTabWidget.setGeometry(QRect(9, 9, 991, 601))
         self.gauss_fit_pane = QWidget()
         self.gauss_fit_pane.setObjectName(u"gauss_fit_pane")
         self.horizontalLayout = QHBoxLayout(self.gauss_fit_pane)
@@ -450,12 +450,97 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_7 = QVBoxLayout()
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.horizontalLayout_15 = QHBoxLayout()
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.graphicsView_3 = PlotWidget(self.verticalLayoutWidget)
         self.graphicsView_3.setObjectName(u"graphicsView_3")
-        self.graphicsView_3.setMinimumSize(QSize(700, 0))
-        self.graphicsView_3.setMaximumSize(QSize(16777215, 10000))
+        self.graphicsView_3.setMinimumSize(QSize(600, 0))
+        self.graphicsView_3.setMaximumSize(QSize(700, 10000))
 
-        self.verticalLayout_7.addWidget(self.graphicsView_3)
+        self.horizontalLayout_15.addWidget(self.graphicsView_3)
+
+        self.verticalFrame_2 = QFrame(self.verticalLayoutWidget)
+        self.verticalFrame_2.setObjectName(u"verticalFrame_2")
+        self.verticalFrame_2.setMinimumSize(QSize(0, 0))
+        self.verticalLayout_8 = QVBoxLayout(self.verticalFrame_2)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.verticalFrame_8 = QFrame(self.verticalFrame_2)
+        self.verticalFrame_8.setObjectName(u"verticalFrame_8")
+        self.verticalFrame_8.setFrameShape(QFrame.Shape.StyledPanel)
+        self.verticalLayout_14 = QVBoxLayout(self.verticalFrame_8)
+        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
+        self.LowPassFilterCheckBox = QCheckBox(self.verticalFrame_8)
+        self.LowPassFilterCheckBox.setObjectName(u"LowPassFilterCheckBox")
+
+        self.verticalLayout_14.addWidget(self.LowPassFilterCheckBox)
+
+        self.label_20 = QLabel(self.verticalFrame_8)
+        self.label_20.setObjectName(u"label_20")
+
+        self.verticalLayout_14.addWidget(self.label_20)
+
+        self.LowPassFilterSpinbox = QSpinBox(self.verticalFrame_8)
+        self.LowPassFilterSpinbox.setObjectName(u"LowPassFilterSpinbox")
+        self.LowPassFilterSpinbox.setMaximum(10000)
+
+        self.verticalLayout_14.addWidget(self.LowPassFilterSpinbox)
+
+        self.label_24 = QLabel(self.verticalFrame_8)
+        self.label_24.setObjectName(u"label_24")
+
+        self.verticalLayout_14.addWidget(self.label_24)
+
+        self.LowPassFilterK_value_Spinbox = QDoubleSpinBox(self.verticalFrame_8)
+        self.LowPassFilterK_value_Spinbox.setObjectName(u"LowPassFilterK_value_Spinbox")
+        self.LowPassFilterK_value_Spinbox.setDecimals(4)
+        self.LowPassFilterK_value_Spinbox.setValue(1.000000000000000)
+
+        self.verticalLayout_14.addWidget(self.LowPassFilterK_value_Spinbox)
+
+
+        self.verticalLayout_8.addWidget(self.verticalFrame_8)
+
+        self.verticalFrame_7 = QFrame(self.verticalFrame_2)
+        self.verticalFrame_7.setObjectName(u"verticalFrame_7")
+        self.verticalFrame_7.setFrameShape(QFrame.Shape.StyledPanel)
+        self.verticalLayout_13 = QVBoxLayout(self.verticalFrame_7)
+        self.verticalLayout_13.setObjectName(u"verticalLayout_13")
+        self.HighPassFilterCheckBox = QCheckBox(self.verticalFrame_7)
+        self.HighPassFilterCheckBox.setObjectName(u"HighPassFilterCheckBox")
+
+        self.verticalLayout_13.addWidget(self.HighPassFilterCheckBox)
+
+        self.label_18 = QLabel(self.verticalFrame_7)
+        self.label_18.setObjectName(u"label_18")
+
+        self.verticalLayout_13.addWidget(self.label_18)
+
+        self.HighPassFilterSpinbox = QSpinBox(self.verticalFrame_7)
+        self.HighPassFilterSpinbox.setObjectName(u"HighPassFilterSpinbox")
+        self.HighPassFilterSpinbox.setMaximum(10000)
+
+        self.verticalLayout_13.addWidget(self.HighPassFilterSpinbox)
+
+        self.label_23 = QLabel(self.verticalFrame_7)
+        self.label_23.setObjectName(u"label_23")
+
+        self.verticalLayout_13.addWidget(self.label_23)
+
+        self.HighPassFilterK_value_Spinbox = QDoubleSpinBox(self.verticalFrame_7)
+        self.HighPassFilterK_value_Spinbox.setObjectName(u"HighPassFilterK_value_Spinbox")
+        self.HighPassFilterK_value_Spinbox.setDecimals(4)
+        self.HighPassFilterK_value_Spinbox.setValue(1.000000000000000)
+
+        self.verticalLayout_13.addWidget(self.HighPassFilterK_value_Spinbox)
+
+
+        self.verticalLayout_8.addWidget(self.verticalFrame_7)
+
+
+        self.horizontalLayout_15.addWidget(self.verticalFrame_2)
+
+
+        self.verticalLayout_7.addLayout(self.horizontalLayout_15)
 
         self.horizontalLayout_14 = QHBoxLayout()
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
@@ -469,12 +554,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_10.addWidget(self.SaveHistogramButton)
 
-        self.label_20 = QLabel(self.verticalFrame_5)
-        self.label_20.setObjectName(u"label_20")
-        self.label_20.setTextFormat(Qt.TextFormat.RichText)
-        self.label_20.setWordWrap(False)
+        self.label_25 = QLabel(self.verticalFrame_5)
+        self.label_25.setObjectName(u"label_25")
 
-        self.verticalLayout_10.addWidget(self.label_20)
+        self.verticalLayout_10.addWidget(self.label_25)
 
 
         self.horizontalLayout_14.addWidget(self.verticalFrame_5)
@@ -516,44 +599,6 @@ class Ui_MainWindow(object):
 
 
         self.horizontalLayout_14.addWidget(self.verticalFrame_4)
-
-        self.verticalFrame_7 = QFrame(self.verticalLayoutWidget)
-        self.verticalFrame_7.setObjectName(u"verticalFrame_7")
-        self.verticalFrame_7.setFrameShape(QFrame.Shape.StyledPanel)
-        self.verticalLayout_13 = QVBoxLayout(self.verticalFrame_7)
-        self.verticalLayout_13.setObjectName(u"verticalLayout_13")
-        self.HighPassFilterCheckBox = QCheckBox(self.verticalFrame_7)
-        self.HighPassFilterCheckBox.setObjectName(u"HighPassFilterCheckBox")
-
-        self.verticalLayout_13.addWidget(self.HighPassFilterCheckBox)
-
-        self.HighPassFilterSpinbox = QSpinBox(self.verticalFrame_7)
-        self.HighPassFilterSpinbox.setObjectName(u"HighPassFilterSpinbox")
-        self.HighPassFilterSpinbox.setMaximum(10000)
-
-        self.verticalLayout_13.addWidget(self.HighPassFilterSpinbox)
-
-
-        self.horizontalLayout_14.addWidget(self.verticalFrame_7)
-
-        self.verticalFrame_8 = QFrame(self.verticalLayoutWidget)
-        self.verticalFrame_8.setObjectName(u"verticalFrame_8")
-        self.verticalFrame_8.setFrameShape(QFrame.Shape.StyledPanel)
-        self.verticalLayout_14 = QVBoxLayout(self.verticalFrame_8)
-        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
-        self.LowPassFilterCheckBox = QCheckBox(self.verticalFrame_8)
-        self.LowPassFilterCheckBox.setObjectName(u"LowPassFilterCheckBox")
-
-        self.verticalLayout_14.addWidget(self.LowPassFilterCheckBox)
-
-        self.LowPassFilterSpinbox = QSpinBox(self.verticalFrame_8)
-        self.LowPassFilterSpinbox.setObjectName(u"LowPassFilterSpinbox")
-        self.LowPassFilterSpinbox.setMaximum(10000)
-
-        self.verticalLayout_14.addWidget(self.LowPassFilterSpinbox)
-
-
-        self.horizontalLayout_14.addWidget(self.verticalFrame_8)
 
 
         self.verticalLayout_7.addLayout(self.horizontalLayout_14)
@@ -611,6 +656,52 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.DataIngestionTab, "")
         self.DataViewTab = QWidget()
         self.DataViewTab.setObjectName(u"DataViewTab")
+        self.verticalLayoutWidget_2 = QWidget(self.DataViewTab)
+        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
+        self.verticalLayoutWidget_2.setGeometry(QRect(0, 0, 971, 541))
+        self.verticalLayout_11 = QVBoxLayout(self.verticalLayoutWidget_2)
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_16 = QHBoxLayout()
+        self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
+        self.verticalLayout_15 = QVBoxLayout()
+        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.pushButton_3 = QPushButton(self.verticalLayoutWidget_2)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+        self.pushButton_3.setMinimumSize(QSize(150, 75))
+
+        self.verticalLayout_15.addWidget(self.pushButton_3)
+
+        self.label_26 = QLabel(self.verticalLayoutWidget_2)
+        self.label_26.setObjectName(u"label_26")
+
+        self.verticalLayout_15.addWidget(self.label_26)
+
+        self.comboBox = QComboBox(self.verticalLayoutWidget_2)
+        self.comboBox.setObjectName(u"comboBox")
+
+        self.verticalLayout_15.addWidget(self.comboBox)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_15.addItem(self.verticalSpacer_3)
+
+
+        self.horizontalLayout_16.addLayout(self.verticalLayout_15)
+
+        self.verticalLayout_16 = QVBoxLayout()
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.heatMapView = PlotWidget(self.verticalLayoutWidget_2)
+        self.heatMapView.setObjectName(u"heatMapView")
+
+        self.verticalLayout_16.addWidget(self.heatMapView)
+
+
+        self.horizontalLayout_16.addLayout(self.verticalLayout_16)
+
+
+        self.verticalLayout_11.addLayout(self.horizontalLayout_16)
+
         self.tabWidget.addTab(self.DataViewTab, "")
         self.ModelFitTab = QWidget()
         self.ModelFitTab.setObjectName(u"ModelFitTab")
@@ -619,7 +710,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1009, 33))
+        self.menubar.setGeometry(QRect(0, 0, 1013, 33))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -628,7 +719,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.horizontalTabWidget.setCurrentIndex(2)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -676,17 +767,23 @@ class Ui_MainWindow(object):
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"Measurements:", None))
         self.EditSelectedHistogramButton.setText(QCoreApplication.translate("MainWindow", u"Edit Selected", None))
         self.DeleteSelectedHistogramButton.setText(QCoreApplication.translate("MainWindow", u"Delete Selected", None))
+        self.LowPassFilterCheckBox.setText(QCoreApplication.translate("MainWindow", u"Lowpass Filter", None))
+        self.label_20.setText(QCoreApplication.translate("MainWindow", u"Frequency:", None))
+        self.label_24.setText(QCoreApplication.translate("MainWindow", u"K-Value:", None))
+        self.HighPassFilterCheckBox.setText(QCoreApplication.translate("MainWindow", u"Highpass Filter", None))
+        self.label_18.setText(QCoreApplication.translate("MainWindow", u"Frequency:", None))
+        self.label_23.setText(QCoreApplication.translate("MainWindow", u"K-Value:", None))
         self.SaveHistogramButton.setText(QCoreApplication.translate("MainWindow", u"Save Histogram", None))
-        self.label_20.setText(QCoreApplication.translate("MainWindow", u"WARNING: THIS ACTION IS DESTRUCTIVE", None))
+        self.label_25.setText(QCoreApplication.translate("MainWindow", u"This action is irreversible", None))
         self.label_19.setText(QCoreApplication.translate("MainWindow", u"Start Range [Hz]:", None))
         self.label_17.setText(QCoreApplication.translate("MainWindow", u"End Range [Hz]:", None))
-        self.HighPassFilterCheckBox.setText(QCoreApplication.translate("MainWindow", u"Highpass Filter", None))
-        self.LowPassFilterCheckBox.setText(QCoreApplication.translate("MainWindow", u"Lowpass Filter", None))
         self.ImportSingleButton.setText(QCoreApplication.translate("MainWindow", u"Import Single Point", None))
         self.ImportMultipleButton.setText(QCoreApplication.translate("MainWindow", u"Import Multiple Points", None))
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"Horizontal View Range:", None))
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"to", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.DataIngestionTab), QCoreApplication.translate("MainWindow", u"Data Ingestion", None))
+        self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"Fit All Histograms", None))
+        self.label_26.setText(QCoreApplication.translate("MainWindow", u"Depth:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.DataViewTab), QCoreApplication.translate("MainWindow", u"Data View", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.ModelFitTab), QCoreApplication.translate("MainWindow", u"Model Fit", None))
         self.horizontalTabWidget.setTabText(self.horizontalTabWidget.indexOf(self.Vortex), QCoreApplication.translate("MainWindow", u"Vortex", None))
