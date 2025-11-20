@@ -922,7 +922,7 @@
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_15">
              <item>
-              <widget class="QPushButton" name="pushButton_3">
+              <widget class="QPushButton" name="Fit_All_Histograms_Button">
                <property name="minimumSize">
                 <size>
                  <width>150</width>
@@ -962,7 +962,7 @@
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_16">
              <item>
-              <widget class="PlotWidget" name="heatMapView"/>
+              <widget class="GraphicsLayoutWidget" name="heatMapView"/>
              </item>
             </layout>
            </item>
@@ -995,6 +995,11 @@
  <customwidgets>
   <customwidget>
    <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+  <customwidget>
+   <class>GraphicsLayoutWidget</class>
    <extends>QGraphicsView</extends>
    <header>pyqtgraph</header>
   </customwidget>

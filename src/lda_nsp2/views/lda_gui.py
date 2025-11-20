@@ -4,7 +4,7 @@ import pyqtgraph as pg
 from PySide6 import QtWidgets
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QListWidgetItem, QDialog
-
+from rich import print
 import numpy as np
 from lda_nsp2.data_ingestion import Ingest_Data, Ingest_Data_1D
 from lda_nsp2.models.fitting import gaussfit, parabfit
@@ -85,6 +85,10 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.SaveHistogramButton.clicked.connect(self.saveCurrentHistogram)
 
         self.ui.listWidget.currentItemChanged.connect(self.redraw_vortex_histogram)
+
+        self.ui.Fit_All_Histograms_Button.clicked.connect(self.fitAllHistograms)
+
+        self.ui.comboBox.currentTextChanged.connect(self.plotHeatMap)
 
     @Slot()
     def ingest_data_to_gui(self):
@@ -298,6 +302,7 @@ class UserInterface(QtWidgets.QMainWindow):
             fileCoords.append(y_value)
             fileCoords.append(z)
 
+            print(fileCoords)
             # save histogram to memory
             hashTableAddress = int(list(fileNameWOPath)[-2] + list(fileNameWOPath)[-1])
             self.vortex_master_data[hashTableAddress] = [[x, y], fileCoords]
@@ -513,19 +518,110 @@ class UserInterface(QtWidgets.QMainWindow):
 
     @Slot()
     def fitAllHistograms(self):
+        self.velocitylist = []
+        for i in range(200):
+            velocity_grid = []
+            for i in range(10):
+                velocity_line = []
+                for j in range(10):
+                    velocity_line.append(None)
+                velocity_grid.append(velocity_line)
+            self.velocitylist.append(velocity_grid)
+
+        self.velocity_err_list = self.velocitylist
+
+        available_heights = []
+
         for histogram in self.vortex_master_data:
-            if histogram:
-                x = histogram[0][0]
-                y = histogram[0][1]
+            if histogram is not None:
+                x = list(histogram[0][0])
+                x.pop(-1)
+
+                y = list(histogram[0][1])
+
+                # print(f"{x} len = {len(x)}")
+                # print(f"{y} len = {len(y)}")
                 metadata = histogram[1]
+                D = metadata[0]
+                R = metadata[1]
+                H = metadata[2]
+
+                if H not in available_heights:
+                    available_heights.append(H)
+                    available_heights.sort()
+
+                x_meas = metadata[3]
+                y_meas = metadata[4]
+                z_meas = metadata[5]
 
                 A_Guess = max(y)
-                B_Guess = 200
-                C_Guess = x[self.data[1].index(max(y))]
+                B_Guess = 0.0005
+                C_Guess = x[y.index(max(y))]
 
                 fit_data = gaussfit(
                     x, y, A_guess=A_Guess, B_guess=B_Guess, C_guess=C_Guess
                 )
+
+                fit_A = fit_data[0]
+                fit_C = fit_data[2]
+
+                x_err = 0.1
+                y_err = 0.1
+                z_err = 0.1
+
+                f_err = 1 / (fit_A * np.sqrt(2 * np.pi))
+
+                velocity_data = bereken_v(
+                    x=x_meas,
+                    y=y_meas,
+                    z=z_meas,
+                    f=fit_C,
+                    delta_x=x_err,
+                    delta_y=y_err,
+                    delta_z=z_err,
+                    delta_f=f_err,
+                )
+
+                self.velocitylist[H][D][R] = velocity_data[2]
+                self.velocity_err_list[H][D][R] = velocity_data[3]
+
+        for i in range(len(available_heights)):
+            available_heights[i] = str(available_heights[i]) + "mm"
+
+        self.ui.comboBox.addItems(available_heights)
+
+    @Slot()
+    def plotHeatMap(self):
+        currentDepth = int(self.ui.comboBox.currentText()[:-2])
+        data = self.velocitylist[currentDepth]
+
+
+        # mask_r = (data != None).any(axis=1)
+        # mask_c = (data != None).any(axis=0)
+
+        # data = data[mask_r][:, mask_c]
+
+        # data = list(data)
+
+        for row in range(len(data)):
+            for column in range(len(data[row])):
+                if data[row][column] is None:
+                    data[row][column] = 0.0
+                else:
+                    data[row][column] = float(data[row][column])
+
+        data = np.array(data)
+
+        image = pg.ImageItem()
+        image.setImage(data)
+
+        view_box = pg.ViewBox()
+        view_box.addItem(image)
+
+        plot = pg.PlotItem(viewBox=view_box)
+
+        self.ui.heatMapView.addItem(plot)
+        self.ui.heatMapView.show()
 
 
 class HistogramEditDialog(Ui_Dialog, QDialog):

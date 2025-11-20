@@ -1,32 +1,46 @@
+"""Whole code"""
+
 import sys
 
+from colour import Color
 import numpy as np
+from pgcolorbar.colorlegend import ColorLegendItem
 from PySide6 import QtWidgets
 import pyqtgraph as pg
 
-#Sample array
-data = np.random.normal(size=(5, 5))
+# Sample array
+data = np.random.normal(size=(200, 200))
 data[40:80, 40:120] += 4
 data = pg.gaussianFilter(data, (15, 15))
-data += np.random.normal(size=(5, 5)) * 0.1
+data += np.random.normal(size=(200, 200)) * 0.1
 
-#Sample data code omitted
-
-#GUI control object
 app = QtWidgets.QApplication(sys.argv)
-#Window creation
+
 window = pg.GraphicsLayoutWidget()
-#Image object creation&Set image
+
+blue, red = Color("blue"), Color("red")
+colors = blue.range_to(red, 256)
+colors_array = np.array([np.array(color.get_rgb()) * 255 for color in colors])
+look_up_table = colors_array.astype(np.uint8)
+
 image = pg.ImageItem()
+image.setOpts(axisOrder="row-major")  # 2021/01/19 Add
+image.setLookupTable(look_up_table)
 image.setImage(data)
-#Create a box to store images&Set image object
+
 view_box = pg.ViewBox()
+view_box.setAspectLocked(lock=True)
 view_box.addItem(image)
-#Plot object creation&View created above_set box
+
 plot = pg.PlotItem(viewBox=view_box)
-#Add plot to window
+
+color_bar = ColorLegendItem(
+    imageItem=image, showHistogram=True, label="sample"
+)  # 2021/01/20 add label
+color_bar.setImageItem(image)
 window.addItem(plot)
-#Window display
+window.addItem(color_bar)
+
 window.show()
-#The end of the program
+
 sys.exit(app.exec_())

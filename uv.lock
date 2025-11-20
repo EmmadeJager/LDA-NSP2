@@ -3,20 +3,56 @@ revision = 3
 requires-python = ">=3.13"
 
 [[package]]
+name = "colour"
+version = "0.1.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a0/d4/5911a7618acddc3f594ddf144ecd8a03c29074a540f4494670ad8f153efe/colour-0.1.5.tar.gz", hash = "sha256:af20120fefd2afede8b001fbef2ea9da70ad7d49fafdb6489025dae8745c3aee", size = 24776, upload-time = "2017-11-19T23:20:08.015Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/74/46/e81907704ab203206769dee1385dc77e1407576ff8f50a0681d0a6b541be/colour-0.1.5-py2.py3-none-any.whl", hash = "sha256:33f6db9d564fadc16e59921a56999b79571160ce09916303d35346dddc17978c", size = 23772, upload-time = "2017-11-19T23:20:04.56Z" },
+]
+
+[[package]]
 name = "lda-nsp2"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "colour" },
+    { name = "pgcolorbar" },
     { name = "pyqtgraph" },
     { name = "pyside6-essentials" },
+    { name = "rich" },
     { name = "scipy" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "colour", specifier = ">=0.1.5" },
+    { name = "pgcolorbar", specifier = ">=1.1.3" },
     { name = "pyqtgraph", specifier = ">=0.13.7" },
     { name = "pyside6-essentials", specifier = ">=6.10.0" },
+    { name = "rich", specifier = ">=14.2.0" },
     { name = "scipy", specifier = ">=1.16.3" },
+]
+
+[[package]]
+name = "markdown-it-py"
+version = "4.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "mdurl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5b/f5/4ec618ed16cc4f8fb3b701563655a69816155e79e24a17b651541804721d/markdown_it_py-4.0.0.tar.gz", hash = "sha256:cb0a2b4aa34f932c007117b194e945bd74e0ec24133ceb5bac59009cda1cb9f3", size = 73070, upload-time = "2025-08-11T12:57:52.854Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/94/54/e7d793b573f298e1c9013b8c4dade17d481164aa517d1d7148619c2cedbf/markdown_it_py-4.0.0-py3-none-any.whl", hash = "sha256:87327c59b172c5011896038353a81343b6754500a08cd7a4973bb48c6d578147", size = 87321, upload-time = "2025-08-11T12:57:51.923Z" },
+]
+
+[[package]]
+name = "mdurl"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
 ]
 
 [[package]]
@@ -72,6 +108,27 @@ wheels = [
 ]
 
 [[package]]
+name = "pgcolorbar"
+version = "1.1.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyqtgraph" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3a/d7/471b171274f45e01d5cf3b8640f734b03f36655d3ab5bff02be96474ccaf/pgcolorbar-1.1.3.zip", hash = "sha256:f7856e1e6865615db768b843ce8aea7259218143badf8ae5a54867219057da70", size = 20465, upload-time = "2023-02-06T20:18:11.896Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d9/84/9c2351b8144a33ebdce3097a973d1182b98963992ba5f2778865f491d726/pgcolorbar-1.1.3-py3-none-any.whl", hash = "sha256:89b975a37d946d4c7d4d0fa723e676c29968b1e3e05b8a9cfe7a909e46ad458a", size = 15975, upload-time = "2023-02-06T20:18:09.982Z" },
+]
+
+[[package]]
+name = "pygments"
+version = "2.19.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b0/77/a5b8c569bf593b0140bde72ea885a803b82086995367bf2037de0159d924/pygments-2.19.2.tar.gz", hash = "sha256:636cb2477cec7f8952536970bc533bc43743542f70392ae026374600add5b887", size = 4968631, upload-time = "2025-06-21T13:39:12.283Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c7/21/705964c7812476f378728bdf590ca4b771ec72385c533964653c68e86bdc/pygments-2.19.2-py3-none-any.whl", hash = "sha256:86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b", size = 1225217, upload-time = "2025-06-21T13:39:07.939Z" },
+]
+
+[[package]]
 name = "pyqtgraph"
 version = "0.13.7"
 source = { registry = "https://pypi.org/simple" }
@@ -96,6 +153,19 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/06/62/fbd1e81caafcda97b147c03f5b06cfaadd8da5fa8298f527d2ec648fa5b7/pyside6_essentials-6.10.0-cp39-abi3-manylinux_2_39_aarch64.whl", hash = "sha256:b1dd0864f0577a448fb44426b91cafff7ee7cccd1782ba66491e1c668033f998", size = 75454169, upload-time = "2025-10-08T09:48:38.21Z" },
     { url = "https://files.pythonhosted.org/packages/bb/3a/d8211d17e6ca70f641c6ebd309f08ef18930acda60e74082c75875a274da/pyside6_essentials-6.10.0-cp39-abi3-win_amd64.whl", hash = "sha256:fc167eb211dd1580e20ba90d299e74898e7a5a1306d832421e879641fc03b6fe", size = 74361794, upload-time = "2025-10-08T09:48:44.335Z" },
     { url = "https://files.pythonhosted.org/packages/61/e9/0e22e3c10325c4ff09447fadb43f7962afb82cef0b65358f5704251c6b32/pyside6_essentials-6.10.0-cp39-abi3-win_arm64.whl", hash = "sha256:6dd0936394cb14da2fd8e869899f5e0925a738b1c8d74c2f22503720ea363fb1", size = 55099467, upload-time = "2025-10-08T09:48:50.902Z" },
+]
+
+[[package]]
+name = "rich"
+version = "14.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "markdown-it-py" },
+    { name = "pygments" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fb/d2/8920e102050a0de7bfabeb4c4614a49248cf8d5d7a8d01885fbb24dc767a/rich-14.2.0.tar.gz", hash = "sha256:73ff50c7c0c1c77c8243079283f4edb376f0f6442433aecb8ce7e6d0b92d1fe4", size = 219990, upload-time = "2025-10-09T14:16:53.064Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/25/7a/b0178788f8dc6cafce37a212c99565fa1fe7872c70c6c9c1e1a372d9d88f/rich-14.2.0-py3-none-any.whl", hash = "sha256:76bc51fe2e57d2b1be1f96c524b890b816e334ab4c1e45888799bfaab0021edd", size = 243393, upload-time = "2025-10-09T14:16:51.245Z" },
 ]
 
 [[package]]

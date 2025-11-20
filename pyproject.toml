@@ -7,8 +7,11 @@ authors = [{ name = "dorusv", email = "dorusfv@proton.me" }]
 requires-python = ">=3.13"
 
 dependencies = [
+    "colour>=0.1.5",
+    "pgcolorbar>=1.1.3",
     "pyqtgraph>=0.13.7",
     "pyside6-essentials>=6.10.0",
+    "rich>=14.2.0",
     "scipy>=1.16.3",
 ]
 

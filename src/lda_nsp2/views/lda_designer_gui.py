@@ -22,7 +22,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBo
     QSpacerItem, QSpinBox, QStatusBar, QTabWidget,
     QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
 
-from pyqtgraph import PlotWidget
+from pyqtgraph import (GraphicsLayoutWidget, PlotWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -666,11 +666,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
         self.verticalLayout_15 = QVBoxLayout()
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
-        self.pushButton_3 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setMinimumSize(QSize(150, 75))
+        self.Fit_All_Histograms_Button = QPushButton(self.verticalLayoutWidget_2)
+        self.Fit_All_Histograms_Button.setObjectName(u"Fit_All_Histograms_Button")
+        self.Fit_All_Histograms_Button.setMinimumSize(QSize(150, 75))
 
-        self.verticalLayout_15.addWidget(self.pushButton_3)
+        self.verticalLayout_15.addWidget(self.Fit_All_Histograms_Button)
 
         self.label_26 = QLabel(self.verticalLayoutWidget_2)
         self.label_26.setObjectName(u"label_26")
@@ -691,7 +691,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_16 = QVBoxLayout()
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
-        self.heatMapView = PlotWidget(self.verticalLayoutWidget_2)
+        self.heatMapView = GraphicsLayoutWidget(self.verticalLayoutWidget_2)
         self.heatMapView.setObjectName(u"heatMapView")
 
         self.verticalLayout_16.addWidget(self.heatMapView)
@@ -782,7 +782,7 @@ class Ui_MainWindow(object):
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"Horizontal View Range:", None))
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"to", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.DataIngestionTab), QCoreApplication.translate("MainWindow", u"Data Ingestion", None))
-        self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"Fit All Histograms", None))
+        self.Fit_All_Histograms_Button.setText(QCoreApplication.translate("MainWindow", u"Fit All Histograms", None))
         self.label_26.setText(QCoreApplication.translate("MainWindow", u"Depth:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.DataViewTab), QCoreApplication.translate("MainWindow", u"Data View", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.ModelFitTab), QCoreApplication.translate("MainWindow", u"Model Fit", None))
