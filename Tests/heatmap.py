@@ -38,6 +38,8 @@ color_bar = ColorLegendItem(
     imageItem=image, showHistogram=True, label="sample"
 )  # 2021/01/20 add label
 color_bar.setImageItem(image)
+
+
 window.addItem(plot)
 window.addItem(color_bar)
 

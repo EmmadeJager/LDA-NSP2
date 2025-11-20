@@ -1,4 +1,6 @@
 import sys
+from colour import Color
+from pgcolorbar.colorlegend import ColorLegendItem
 
 import pyqtgraph as pg
 from PySide6 import QtWidgets
@@ -595,7 +597,6 @@ class UserInterface(QtWidgets.QMainWindow):
         currentDepth = int(self.ui.comboBox.currentText()[:-2])
         data = self.velocitylist[currentDepth]
 
-
         # mask_r = (data != None).any(axis=1)
         # mask_c = (data != None).any(axis=0)
 
@@ -611,16 +612,32 @@ class UserInterface(QtWidgets.QMainWindow):
                     data[row][column] = float(data[row][column])
 
         data = np.array(data)
+        print(data)
+
+        blue, red = Color("blue"), Color("red")
+        colors = blue.range_to(red, 256)
+        colors_array = np.array([np.array(color.get_rgb()) * 255 for color in colors])
+        look_up_table = colors_array.astype(np.uint8)
 
         image = pg.ImageItem()
+        image.setOpts(axisOrder="row-major")
+        image.setLookupTable(look_up_table)
         image.setImage(data)
 
         view_box = pg.ViewBox()
+        view_box.setAspectLocked(lock=True)
         view_box.addItem(image)
 
         plot = pg.PlotItem(viewBox=view_box)
 
+        color_bar = ColorLegendItem(
+            imageItem=image, showHistogram=True, label="sample"
+        ) 
+        color_bar.setImageItem(image)
+
         self.ui.heatMapView.addItem(plot)
+        self.ui.heatMapView.addItem(color_bar)
+
         self.ui.heatMapView.show()
 
 

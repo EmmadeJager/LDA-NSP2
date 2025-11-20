@@ -16,11 +16,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
-    QFrame, QHBoxLayout, QHeaderView, QLCDNumber,
-    QLabel, QLayout, QListWidget, QListWidgetItem,
-    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QSpacerItem, QSpinBox, QStatusBar, QTabWidget,
-    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
+    QFrame, QGraphicsView, QHBoxLayout, QHeaderView,
+    QLCDNumber, QLabel, QLayout, QListWidget,
+    QListWidgetItem, QMainWindow, QMenuBar, QPushButton,
+    QRadioButton, QSizePolicy, QSpacerItem, QSpinBox,
+    QStatusBar, QTabWidget, QTableWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 from pyqtgraph import (GraphicsLayoutWidget, PlotWidget)
 
@@ -28,12 +29,13 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1013, 664)
+        MainWindow.resize(2085, 1198)
+        MainWindow.setMinimumSize(QSize(0, 0))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalTabWidget = QTabWidget(self.centralwidget)
         self.horizontalTabWidget.setObjectName(u"horizontalTabWidget")
-        self.horizontalTabWidget.setGeometry(QRect(9, 9, 991, 601))
+        self.horizontalTabWidget.setGeometry(QRect(9, 9, 2071, 1131))
         self.gauss_fit_pane = QWidget()
         self.gauss_fit_pane.setObjectName(u"gauss_fit_pane")
         self.horizontalLayout = QHBoxLayout(self.gauss_fit_pane)
@@ -177,7 +179,7 @@ class Ui_MainWindow(object):
         self.velocity_pane.setObjectName(u"velocity_pane")
         self.horizontalLayoutWidget = QWidget(self.velocity_pane)
         self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
-        self.horizontalLayoutWidget.setGeometry(QRect(9, -1, 971, 561))
+        self.horizontalLayoutWidget.setGeometry(QRect(9, -1, 2051, 1101))
         self.horizontalLayout_6 = QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
@@ -381,6 +383,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_12 = QHBoxLayout()
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_12.addItem(self.horizontalSpacer_4)
+
         self.label_13 = QLabel(self.horizontalLayoutWidget)
         self.label_13.setObjectName(u"label_13")
         self.label_13.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
@@ -408,12 +414,12 @@ class Ui_MainWindow(object):
         self.Vortex.setObjectName(u"Vortex")
         self.tabWidget = QTabWidget(self.Vortex)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(0, 0, 981, 571))
+        self.tabWidget.setGeometry(QRect(0, 0, 2061, 1091))
         self.DataIngestionTab = QWidget()
         self.DataIngestionTab.setObjectName(u"DataIngestionTab")
         self.verticalLayoutWidget = QWidget(self.DataIngestionTab)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 971, 531))
+        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 2051, 1061))
         self.verticalLayout_5 = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -454,8 +460,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.graphicsView_3 = PlotWidget(self.verticalLayoutWidget)
         self.graphicsView_3.setObjectName(u"graphicsView_3")
-        self.graphicsView_3.setMinimumSize(QSize(600, 0))
-        self.graphicsView_3.setMaximumSize(QSize(700, 10000))
+        self.graphicsView_3.setMinimumSize(QSize(1750, 0))
+        self.graphicsView_3.setMaximumSize(QSize(100000, 10000))
 
         self.horizontalLayout_15.addWidget(self.graphicsView_3)
 
@@ -536,6 +542,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_8.addWidget(self.verticalFrame_7)
 
+        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_8.addItem(self.verticalSpacer_5)
+
 
         self.horizontalLayout_15.addWidget(self.verticalFrame_2)
 
@@ -600,6 +610,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_14.addWidget(self.verticalFrame_4)
 
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_14.addItem(self.horizontalSpacer_3)
+
 
         self.verticalLayout_7.addLayout(self.horizontalLayout_14)
 
@@ -658,7 +672,7 @@ class Ui_MainWindow(object):
         self.DataViewTab.setObjectName(u"DataViewTab")
         self.verticalLayoutWidget_2 = QWidget(self.DataViewTab)
         self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(0, 0, 971, 541))
+        self.verticalLayoutWidget_2.setGeometry(QRect(0, 0, 2051, 1061))
         self.verticalLayout_11 = QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
         self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
@@ -705,12 +719,82 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.DataViewTab, "")
         self.ModelFitTab = QWidget()
         self.ModelFitTab.setObjectName(u"ModelFitTab")
+        self.horizontalLayoutWidget_4 = QWidget(self.ModelFitTab)
+        self.horizontalLayoutWidget_4.setObjectName(u"horizontalLayoutWidget_4")
+        self.horizontalLayoutWidget_4.setGeometry(QRect(0, 0, 2051, 1061))
+        self.horizontalLayout_17 = QHBoxLayout(self.horizontalLayoutWidget_4)
+        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.horizontalLayout_17.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_20 = QVBoxLayout()
+        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.verticalFrame_71 = QFrame(self.horizontalLayoutWidget_4)
+        self.verticalFrame_71.setObjectName(u"verticalFrame_71")
+        self.verticalFrame_71.setFrameShape(QFrame.Shape.StyledPanel)
+        self.verticalLayout_22 = QVBoxLayout(self.verticalFrame_71)
+        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
+        self.label_27 = QLabel(self.verticalFrame_71)
+        self.label_27.setObjectName(u"label_27")
+
+        self.verticalLayout_22.addWidget(self.label_27)
+
+        self.fittingModel_radioButton = QRadioButton(self.verticalFrame_71)
+        self.fittingModel_radioButton.setObjectName(u"fittingModel_radioButton")
+        self.fittingModel_radioButton.setChecked(True)
+
+        self.verticalLayout_22.addWidget(self.fittingModel_radioButton)
+
+        self.fittingModel_radioButton_2 = QRadioButton(self.verticalFrame_71)
+        self.fittingModel_radioButton_2.setObjectName(u"fittingModel_radioButton_2")
+
+        self.verticalLayout_22.addWidget(self.fittingModel_radioButton_2)
+
+        self.fittingModel_radioButton_3 = QRadioButton(self.verticalFrame_71)
+        self.fittingModel_radioButton_3.setObjectName(u"fittingModel_radioButton_3")
+
+        self.verticalLayout_22.addWidget(self.fittingModel_radioButton_3)
+
+        self.radioButton = QRadioButton(self.verticalFrame_71)
+        self.radioButton.setObjectName(u"radioButton")
+
+        self.verticalLayout_22.addWidget(self.radioButton)
+
+
+        self.verticalLayout_20.addWidget(self.verticalFrame_71)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_20.addItem(self.verticalSpacer_4)
+
+        self.label_28 = QLabel(self.horizontalLayoutWidget_4)
+        self.label_28.setObjectName(u"label_28")
+
+        self.verticalLayout_20.addWidget(self.label_28)
+
+        self.lcdNumber = QLCDNumber(self.horizontalLayoutWidget_4)
+        self.lcdNumber.setObjectName(u"lcdNumber")
+        self.lcdNumber.setFrameShape(QFrame.Shape.StyledPanel)
+
+        self.verticalLayout_20.addWidget(self.lcdNumber)
+
+
+        self.horizontalLayout_17.addLayout(self.verticalLayout_20)
+
+        self.verticalLayout_21 = QVBoxLayout()
+        self.verticalLayout_21.setObjectName(u"verticalLayout_21")
+        self.graphicsView_4 = QGraphicsView(self.horizontalLayoutWidget_4)
+        self.graphicsView_4.setObjectName(u"graphicsView_4")
+
+        self.verticalLayout_21.addWidget(self.graphicsView_4)
+
+
+        self.horizontalLayout_17.addLayout(self.verticalLayout_21)
+
         self.tabWidget.addTab(self.ModelFitTab, "")
         self.horizontalTabWidget.addTab(self.Vortex, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1013, 33))
+        self.menubar.setGeometry(QRect(0, 0, 2085, 33))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -719,7 +803,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.horizontalTabWidget.setCurrentIndex(2)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -785,6 +869,12 @@ class Ui_MainWindow(object):
         self.Fit_All_Histograms_Button.setText(QCoreApplication.translate("MainWindow", u"Fit All Histograms", None))
         self.label_26.setText(QCoreApplication.translate("MainWindow", u"Depth:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.DataViewTab), QCoreApplication.translate("MainWindow", u"Data View", None))
+        self.label_27.setText(QCoreApplication.translate("MainWindow", u"Model:", None))
+        self.fittingModel_radioButton.setText(QCoreApplication.translate("MainWindow", u"Lamb-Oseen Vortex", None))
+        self.fittingModel_radioButton_2.setText(QCoreApplication.translate("MainWindow", u"Rankine Vortex", None))
+        self.fittingModel_radioButton_3.setText(QCoreApplication.translate("MainWindow", u"Kaufmann Vortex", None))
+        self.radioButton.setText(QCoreApplication.translate("MainWindow", u"Multimodel Vortex", None))
+        self.label_28.setText(QCoreApplication.translate("MainWindow", u"Reduced Chi-Square:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.ModelFitTab), QCoreApplication.translate("MainWindow", u"Model Fit", None))
         self.horizontalTabWidget.setTabText(self.horizontalTabWidget.indexOf(self.Vortex), QCoreApplication.translate("MainWindow", u"Vortex", None))
     # retranslateUi
