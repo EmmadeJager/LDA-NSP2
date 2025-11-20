@@ -16,12 +16,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
-    QFrame, QGraphicsView, QHBoxLayout, QHeaderView,
-    QLCDNumber, QLabel, QLayout, QListWidget,
-    QListWidgetItem, QMainWindow, QMenuBar, QPushButton,
-    QRadioButton, QSizePolicy, QSpacerItem, QSpinBox,
-    QStatusBar, QTabWidget, QTableWidget, QTableWidgetItem,
-    QVBoxLayout, QWidget)
+    QFrame, QHBoxLayout, QHeaderView, QLCDNumber,
+    QLabel, QLayout, QListWidget, QListWidgetItem,
+    QMainWindow, QMenuBar, QPushButton, QRadioButton,
+    QSizePolicy, QSpacerItem, QSpinBox, QStatusBar,
+    QTabWidget, QTableWidget, QTableWidgetItem, QVBoxLayout,
+    QWidget)
 
 from pyqtgraph import (GraphicsLayoutWidget, PlotWidget)
 
@@ -761,6 +761,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_20.addWidget(self.verticalFrame_71)
 
+        self.doVortexModelFitButton = QPushButton(self.horizontalLayoutWidget_4)
+        self.doVortexModelFitButton.setObjectName(u"doVortexModelFitButton")
+
+        self.verticalLayout_20.addWidget(self.doVortexModelFitButton)
+
         self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_20.addItem(self.verticalSpacer_4)
@@ -781,10 +786,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_21 = QVBoxLayout()
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
-        self.graphicsView_4 = QGraphicsView(self.horizontalLayoutWidget_4)
-        self.graphicsView_4.setObjectName(u"graphicsView_4")
+        self.VortexModelFit_GraphicsView = GraphicsLayoutWidget(self.horizontalLayoutWidget_4)
+        self.VortexModelFit_GraphicsView.setObjectName(u"VortexModelFit_GraphicsView")
 
-        self.verticalLayout_21.addWidget(self.graphicsView_4)
+        self.verticalLayout_21.addWidget(self.VortexModelFit_GraphicsView)
 
 
         self.horizontalLayout_17.addLayout(self.verticalLayout_21)
@@ -803,7 +808,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.horizontalTabWidget.setCurrentIndex(2)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -874,6 +879,7 @@ class Ui_MainWindow(object):
         self.fittingModel_radioButton_2.setText(QCoreApplication.translate("MainWindow", u"Rankine Vortex", None))
         self.fittingModel_radioButton_3.setText(QCoreApplication.translate("MainWindow", u"Kaufmann Vortex", None))
         self.radioButton.setText(QCoreApplication.translate("MainWindow", u"Multimodel Vortex", None))
+        self.doVortexModelFitButton.setText(QCoreApplication.translate("MainWindow", u"Do Fit", None))
         self.label_28.setText(QCoreApplication.translate("MainWindow", u"Reduced Chi-Square:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.ModelFitTab), QCoreApplication.translate("MainWindow", u"Model Fit", None))
         self.horizontalTabWidget.setTabText(self.horizontalTabWidget.indexOf(self.Vortex), QCoreApplication.translate("MainWindow", u"Vortex", None))

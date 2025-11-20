@@ -42,3 +42,20 @@ def parabfit(xvals, yvals, A_guess, B_guess, C_guess):
     fit_y = parabola(fit_x, fit_A, fit_B, fit_C)
 
     return fit_A, fit_B, fit_C, fit_y, fit_x
+
+
+# Lamb-Oseen model
+def lamb_oseen_model(xy, x0, y0, Gamma, rc):
+    """Lamb-Oseen vortex fitting function"""
+    x, y = xy
+    
+    dx = x - x0
+    dy = y - y0
+    r = np.sqrt(dx**2 + dy**2)
+    r = np.maximum(r, 1e-6)
+    
+    v_tangential = (Gamma / (2 * np.pi * r)) * (1 - np.exp(-r**2 / rc**2))
+    theta = np.arctan2(dy, dx)
+    v_measured = -v_tangential * np.sin(theta)
+    
+    return v_measured

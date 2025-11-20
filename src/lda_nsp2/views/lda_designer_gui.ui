@@ -585,7 +585,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="DataIngestionTab">
        <attribute name="title">
@@ -1080,6 +1080,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="doVortexModelFitButton">
+             <property name="text">
+              <string>Do Fit</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="verticalSpacer_4">
              <property name="orientation">
               <enum>Qt::Orientation::Vertical</enum>
@@ -1111,7 +1118,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_21">
            <item>
-            <widget class="QGraphicsView" name="graphicsView_4"/>
+            <widget class="GraphicsLayoutWidget" name="VortexModelFit_GraphicsView"/>
            </item>
           </layout>
          </item>

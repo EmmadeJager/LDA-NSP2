@@ -3,17 +3,19 @@ from colour import Color
 from pgcolorbar.colorlegend import ColorLegendItem
 
 import pyqtgraph as pg
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QListWidgetItem, QDialog
 from rich import print
 import numpy as np
 from lda_nsp2.data_ingestion import Ingest_Data, Ingest_Data_1D
-from lda_nsp2.models.fitting import gaussfit, parabfit
+from lda_nsp2.models.fitting import gaussfit, parabfit, lamb_oseen_model
 from lda_nsp2.models.velocitycalculation import bereken_v
 from lda_nsp2.views.lda_designer_gui import Ui_MainWindow
 from lda_nsp2.views.lda_vortex_histogram_edit_dialog import Ui_Dialog
 from lda_nsp2.models.filters import lowpass, highpass
+from scipy.optimize import differential_evolution, curve_fit
+from lda_nsp2.views.custom_widgets import HeatMapWidget
 
 pg.setConfigOption("background", 0.2)
 pg.setConfigOption("foreground", 0.5)
@@ -91,6 +93,8 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.Fit_All_Histograms_Button.clicked.connect(self.fitAllHistograms)
 
         self.ui.comboBox.currentTextChanged.connect(self.plotHeatMap)
+
+        self.ui.doVortexModelFitButton.clicked.connect(self.fitLambOseen)
 
     @Slot()
     def ingest_data_to_gui(self):
@@ -307,7 +311,17 @@ class UserInterface(QtWidgets.QMainWindow):
             print(fileCoords)
             # save histogram to memory
             hashTableAddress = int(list(fileNameWOPath)[-2] + list(fileNameWOPath)[-1])
-            self.vortex_master_data[hashTableAddress] = [[x, y], fileCoords]
+            self.vortex_master_data[hashTableAddress] = [
+                [x, y],
+                [
+                    fileCoords[0] + 12,
+                    fileCoords[1] + 12,
+                    fileCoords[2],
+                    fileCoords[3],
+                    fileCoords[4],
+                    fileCoords[5]
+                ],
+            ]
             self.currently_selected_vortex_histogram = hashTableAddress
 
     @Slot()
@@ -523,9 +537,9 @@ class UserInterface(QtWidgets.QMainWindow):
         self.velocitylist = []
         for i in range(200):
             velocity_grid = []
-            for i in range(10):
+            for i in range(30):
                 velocity_line = []
-                for j in range(10):
+                for j in range(30):
                     velocity_line.append(None)
                 velocity_grid.append(velocity_line)
             self.velocitylist.append(velocity_grid)
@@ -596,7 +610,7 @@ class UserInterface(QtWidgets.QMainWindow):
     def plotHeatMap(self):
         currentDepth = int(self.ui.comboBox.currentText()[:-2])
         data = self.velocitylist[currentDepth]
-
+        data_sigma = self.velocity_err_list[currentDepth]
         # mask_r = (data != None).any(axis=1)
         # mask_c = (data != None).any(axis=0)
 
@@ -614,6 +628,16 @@ class UserInterface(QtWidgets.QMainWindow):
         data = np.array(data)
         print(data)
 
+        for row in range(len(data_sigma)):
+            for column in range(len(data_sigma[row])):
+                if data_sigma[row][column] is None:
+                    data_sigma[row][column] = 0.0
+                else:
+                    data_sigma[row][column] = float(data_sigma[row][column])
+
+        data_sigma = np.array(data_sigma)
+        print(data_sigma)
+
         blue, red = Color("blue"), Color("red")
         colors = blue.range_to(red, 256)
         colors_array = np.array([np.array(color.get_rgb()) * 255 for color in colors])
@@ -630,15 +654,340 @@ class UserInterface(QtWidgets.QMainWindow):
 
         plot = pg.PlotItem(viewBox=view_box)
 
-        color_bar = ColorLegendItem(
-            imageItem=image, showHistogram=True, label="sample"
-        ) 
+        color_bar = ColorLegendItem(imageItem=image, showHistogram=True, label="sample")
         color_bar.setImageItem(image)
 
         self.ui.heatMapView.addItem(plot)
         self.ui.heatMapView.addItem(color_bar)
 
         self.ui.heatMapView.show()
+
+    @Slot()
+    def fitLambOseen(self):
+        currentDepth = int(self.ui.comboBox.currentText()[:-2])
+        data = self.velocitylist[currentDepth]
+        data_sigma = self.velocity_err_list[currentDepth]
+
+        for row in range(len(data)):
+            for column in range(len(data[row])):
+                if data[row][column] is None:
+                    data[row][column] = 0.0
+                else:
+                    data[row][column] = float(data[row][column])
+
+        data = np.array(data)
+
+        for row in range(len(data_sigma)):
+            for column in range(len(data_sigma[row])):
+                if data_sigma[row][column] is None:
+                    data_sigma[row][column] = 0.0
+                else:
+                    data_sigma[row][column] = float(data_sigma[row][column])
+
+        data_sigma = np.array(data_sigma)
+
+        self.fitVortexModel(data, data_sigma)
+
+    @Slot()
+    def fitVortexModel(self, data, err_data, model=lamb_oseen_model):
+        # Parse data and uncertainties
+        data_array = np.array(data)
+        uncertainty_array = np.array(err_data)
+        n_x, n_y = data_array.shape
+
+        # Create coordinate grids
+        x_coords = np.arange(n_x)
+        y_coords = np.arange(n_y)
+        X, Y = np.meshgrid(x_coords, y_coords, indexing="ij")
+
+        V = data_array
+        sigma = uncertainty_array
+        mask = V != 0.0
+
+        # Extract valid data with uncertainties
+        x_valid = X[mask]
+        y_valid = Y[mask]
+        v_valid = V[mask]
+        sigma_valid = sigma[mask]
+
+        print(f"Valid measurements: {len(v_valid)} out of {n_x * n_y}")
+        print(f"Velocity range: [{v_valid.min():.2f}, {v_valid.max():.2f}]")
+        print(f"Uncertainty range: [{sigma_valid.min():.2f}, {sigma_valid.max():.2f}]")
+
+        print("\nFinding initial parameters with differential evolution...")
+
+        def objective_weighted(params):
+            """Weighted objective function"""
+            try:
+                v_pred = model((x_valid, y_valid), *params)
+                weighted_residuals = (v_valid - v_pred) / sigma_valid
+                return np.sum(weighted_residuals**2)
+            except:
+                return 1e10
+
+        bounds = [
+            (-2, 5),  # x0
+            (-2, 8),  # y0
+            (-50, 50),  # Gamma
+            (0.1, 5),  # rc
+        ]
+
+        result = differential_evolution(
+            objective_weighted,
+            bounds,
+            maxiter=1000,
+            popsize=15,
+            tol=1e-7,
+            seed=42,
+            disp=True,
+        )
+
+        if result.success:
+            popt_initial = result.x
+            print("Initial fit successful")
+
+            print("\nRefining with weighted curve_fit")
+
+            try:
+                popt, pcov = curve_fit(
+                    model,
+                    (x_valid, y_valid),
+                    v_valid,
+                    p0=popt_initial,
+                    sigma=sigma_valid,
+                    absolute_sigma=True,
+                    maxfev=10000,
+                )
+
+                perr = np.sqrt(np.diag(pcov))
+                x0_fit, y0_fit, Gamma_fit, rc_fit = popt
+
+                print(f"\n{'=' * 60}")
+                print("FITTED PARAMETERS (with uncertainties):")
+                print(f"{'=' * 60}")
+                print(f"  Vortex center X: {x0_fit:.4f} ± {perr[0]:.4f}")
+                print(f"  Vortex center Y: {y0_fit:.4f} ± {perr[1]:.4f}")
+                print(f"  Circulation Γ:   {Gamma_fit:.6f} ± {perr[2]:.6f}")
+                print(f"  Core radius rc:  {rc_fit:.6f} ± {perr[3]:.6f}")
+
+            except Exception as e:
+                print(f"Refinement failed: {e}")
+                print("Using differential evolution result")
+                popt = popt_initial
+                perr = np.array([0, 0, 0, 0])
+                x0_fit, y0_fit, Gamma_fit, rc_fit = popt
+
+            # Calculate fitted values and residuals
+            v_fitted_valid = model((x_valid, y_valid), *popt)
+            residuals = v_valid - v_fitted_valid
+            weighted_residuals = residuals / sigma_valid
+
+            # Chi-squared statistic
+            chi_squared = np.sum(weighted_residuals**2)
+            dof = len(v_valid) - 4  # degrees of freedom
+            reduced_chi_squared = chi_squared / dof
+
+            rmse = np.sqrt(np.mean(residuals**2))
+            weighted_rmse = np.sqrt(np.mean(weighted_residuals**2))
+
+            print("\nFIT QUALITY:")
+            print(f"  RMSE: {rmse:.6f}")
+            print(f"  Weighted RMSE: {weighted_rmse:.6f}")
+            print(f"  χ²: {chi_squared:.4f}")
+            print(f"  Reduced χ² (χ²/dof): {reduced_chi_squared:.4f}")
+            if reduced_chi_squared < 1.5:
+                print("  → Good fit! (reduced χ² close to 1)")
+            elif reduced_chi_squared > 3:
+                print("  → Poor fit or underestimated uncertainties")
+
+            # Full grid prediction
+            v_fitted_full = model((X, Y), *popt)
+
+            self.plotOriginalMeasurements(
+                data,
+                x0_fit,
+                y0_fit,
+                "Original Measurements",
+                "bwr",
+                "Velocity (m/s)",
+            )
+            self.plotOriginalMeasurements(
+                v_fitted_full,
+                x0_fit,
+                y0_fit,
+                "Fitted Lamb-Oseen",
+                "twilight_shifted",
+                "Velocity (m/s)",
+            )
+            self.plotOriginalMeasurements(
+                sigma,
+                x0_fit,
+                y0_fit,
+                "Measurement Uncertainties",
+                "afmhot_r",
+                "Uncertainty (m/s)",
+            )
+
+            self.ui.VortexModelFit_GraphicsView.nextRow()
+
+            min_v = min(v_valid.min(), v_fitted_valid.min())
+            max_v = max(v_valid.max(), v_fitted_valid.max())
+
+            self.scatterPlot(
+                v_valid,
+                v_fitted_valid,
+                sigma_valid,
+                f"Fit Quality (χ²/dof={reduced_chi_squared:.2f})",
+                min_v,
+                max_v,
+            )
+
+            # print(residuals)
+            # self.plotOriginalMeasurements(
+            #     abs(residuals),
+            #     x0_fit,
+            #     y0_fit,
+            #     "Residuals (Measured - Fitted)",
+            #     "plasma",
+            #     "Residual (m/s)"
+            # )
+            # self.plotOriginalMeasurements(
+            #     weighted_residuals,
+            #     x0_fit,
+            #     y0_fit,
+            #     "Weighted Residuals (σ units)",
+            #     "plasma",
+            #     "Weighted Residual - (Meas-Fit)/σ"
+            # )
+
+            self.plotResidualHistogram(weighted_residuals)
+            self.plotResidualsvsFittedValues(residuals, v_fitted_valid, sigma_valid)
+        else:
+            print("Fitting Failed")
+
+    def plotOriginalMeasurements(
+        self, data, x0_fit, y0_fit, title, lookupTable, colorbarLabel
+    ):
+        V_display = data.copy()
+        V_display[data == 0.0] = np.nan
+
+        image = pg.ImageItem()
+        # image.setOpts(axisOrder="row-major")
+        image.setLookupTable(
+            pg.colormap.getFromMatplotlib(lookupTable).getLookupTable()
+        )
+        image.setImage(V_display)
+
+        view_box = pg.ViewBox()
+        view_box.setAspectLocked(lock=True)
+        view_box.addItem(image)
+
+        plot = pg.PlotItem(viewBox=view_box)
+
+        plot.plot(
+            [x0_fit],
+            [y0_fit],
+            symbol="+",
+            symbolSize=20,
+            symbolPen=pg.mkPen("k", width=3),
+        )
+
+        plot.setLabel("left", "Y position")
+        plot.setLabel("bottom", "X position")
+        plot.setTitle(title)
+
+        color_bar = ColorLegendItem(
+            imageItem=image, showHistogram=True, label=colorbarLabel
+        )
+        color_bar.setImageItem(image)
+
+        valid_data = data[data != 0.0]
+        data_min = np.percentile(valid_data, 2)
+        data_max = np.percentile(valid_data, 98)
+        image.setLevels([data_min, data_max])
+        color_bar.setLevels((-data_max, data_max))
+
+        self.ui.VortexModelFit_GraphicsView.addItem(plot)
+        self.ui.VortexModelFit_GraphicsView.addItem(color_bar)
+
+        self.ui.VortexModelFit_GraphicsView.show()
+
+    def scatterPlot(self, v_valid, v_fitted_valid, sigma_valid, title, min_v, max_v):
+        view_box = pg.ViewBox()
+        view_box.setAspectLocked(lock=True)
+
+        plot = pg.PlotItem(viewBox=view_box)
+
+        error_bars = pg.ErrorBarItem(
+            x=v_valid,
+            y=v_fitted_valid,
+            width=2 * sigma_valid,
+        )
+        plot.addItem(error_bars)
+
+        plot.plot(
+            [min_v, max_v],
+            [min_v, max_v],
+            pen=pg.mkPen("r", style=QtCore.Qt.DashLine, width=2),
+        )
+
+        plot.plot(x=v_valid, y=v_fitted_valid, symbol="o", pen=None)
+
+        plot.setLabel("left", "Fitted velocity (m/s)")
+        plot.setLabel("bottom", "Measured velocity (m/s)")
+        plot.setTitle(title)
+        plot.showGrid(x=True, y=True, alpha=0.9)
+
+        self.ui.VortexModelFit_GraphicsView.addItem(plot)
+        self.ui.VortexModelFit_GraphicsView.show()
+
+    def plotResidualHistogram(self, weighted_residuals):
+        y, x = np.histogram(weighted_residuals, bins=10)
+
+        view_box = pg.ViewBox()
+        view_box.setAspectLocked(lock=True)
+
+        plot = pg.PlotItem(viewBox=view_box)
+
+        bgi = pg.BarGraphItem(
+            x0=x[:-1], x1=x[1:], height=y, pen="w", brush=(16, 3, 0, 255)
+        )
+        plot.addItem(bgi)
+        plot.setXRange(x[0], x[-1], padding=0.05)
+        plot.setLabel("left", "Count")
+        plot.setLabel("bottom", "Weighted Residual (σ units)")
+        plot.setTitle("Residual Distribution")
+
+        self.ui.VortexModelFit_GraphicsView.addItem(plot)
+        self.ui.VortexModelFit_GraphicsView.show()
+
+    def plotResidualsvsFittedValues(self, residuals, v_fitted_valid, sigma_valid):
+        view_box = pg.ViewBox()
+
+        plot = pg.PlotItem(viewBox=view_box)
+
+        error_bars = pg.ErrorBarItem(
+            y=residuals,
+            x=v_fitted_valid,
+            height=2 * sigma_valid,
+        )
+        plot.addItem(error_bars)
+
+        plot.plot(x=v_fitted_valid, y=residuals, symbol="o", pen=None)
+        plot.vb.setLimits(
+            xMin=min(v_fitted_valid) - 0.05,
+            xMax=max(v_fitted_valid) + 0.05,
+            yMin=min(residuals) - max(sigma_valid),
+            yMax=max(residuals) + max(sigma_valid),
+        )
+
+        plot.setLabel("left", "Residual (m/s)")
+        plot.setLabel("bottom", "Fitted velocity (m/s)")
+        plot.setTitle("Residuals vs fitted values")
+        plot.showGrid(x=True, y=True, alpha=0.9)
+
+        self.ui.VortexModelFit_GraphicsView.addItem(plot)
+        self.ui.VortexModelFit_GraphicsView.show()
 
 
 class HistogramEditDialog(Ui_Dialog, QDialog):
