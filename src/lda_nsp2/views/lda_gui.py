@@ -104,8 +104,17 @@ class UserInterface(QtWidgets.QMainWindow):
 
         self.ui.comboBox.currentTextChanged.connect(self.plotHeatMap)
 
-        self.ui.FitModelListWidget.setCurrentRow(0)
-        self.ui.doVortexModelFitButton.clicked.connect(self.fitVortexWrapper)
+        self.ui.fitVatistas_button.clicked.connect(self.fitVatistas)
+        self.ui.fitLambOseen_button.clicked.connect(self.fitLambOseen)
+        self.ui.fitRankine_button.clicked.connect(self.fitRankine)
+        self.ui.fitModifiedRankine_button.clicked.connect(self.fitModifiedRankine)
+        self.ui.fitKaufmann_button.clicked.connect(self.fitKaufmann)
+        self.ui.fitBurgers_button.clicked.connect(self.fitBurgers)
+        self.ui.fitSullivan_button.clicked.connect(self.fitSullivan)
+        self.ui.fitBatchelor_button.clicked.connect(self.fitBatchelor)
+        self.ui.fitTwoCell_button.clicked.connect(self.fitTwoCell)
+
+        self.ui.fitAllModels_button.clicked.connect(self.fitAllModels)
 
     @Slot()
     def ingest_data_to_gui(self):
@@ -669,35 +678,12 @@ class UserInterface(QtWidgets.QMainWindow):
         image.setLevels([data_min, data_max])
         color_bar.setLevels((-data_max, data_max))
 
+        self.ui.heatMapView.clear()
+
         self.ui.heatMapView.addItem(plot)
         self.ui.heatMapView.addItem(color_bar)
 
         self.ui.heatMapView.show()
-
-    @Slot()
-    def fitVortexWrapper(self):
-        self.fitLambOseen()
-        return
-        text = self.ui.FitModelListWidget.currentItem.text()
-
-        if text == "Vatistas":
-            self.fitVatistas()
-        elif text == "Lamb-Oseen":
-            self.fitLambOseen()
-        elif text == "Rankine":
-            self.fitRankine()
-        elif text == "Modified Rankine (Smooth transition)":
-            self.fitModifiedRankine()
-        elif text == "Kaufmann/Scully":
-            self.fitKaufmann()
-        elif text == "Burgers":
-            self.fitBurgers()
-        elif text == "Sullivan":
-            self.fitSullivan()
-        elif text == "Batchelor":
-            self.fitBatchelor()
-        elif text == "Two-Cell":
-            self.fitTwoCell()
 
     @Slot()
     def fitLambOseen(self):
@@ -934,7 +920,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self.fitVortexModel(data, data_sigma, two_cell_model)
 
     @Slot()
-    def fitVortexModel(self, data, err_data, model):
+    def fitVortexModel(self, data, err_data, model, plotting=True):
         # Parse data and uncertainties
         data_array = np.array(data)
         uncertainty_array = np.array(err_data)
@@ -964,8 +950,8 @@ class UserInterface(QtWidgets.QMainWindow):
                 return 1e10
 
         bounds = [
-            (-2, 5),  # x0
-            (-2, 8),  # y0
+            (-1, 2),  # x0
+            (1, 4),  # y0
             (-50, 50),  # Gamma
             (0.1, 5),  # rc
         ]
@@ -995,6 +981,7 @@ class UserInterface(QtWidgets.QMainWindow):
                     sigma=sigma_valid,
                     absolute_sigma=True,
                     maxfev=10000,
+                    bounds=bounds,
                 )
 
                 perr = np.sqrt(np.diag(pcov))
@@ -1022,6 +1009,22 @@ class UserInterface(QtWidgets.QMainWindow):
                 popt = popt_initial
                 perr = np.array([0, 0, 0, 0])
                 x0_fit, y0_fit, Gamma_fit, rc_fit = popt
+
+                self.ui.VortexFitLog.append(f"\n{'=' * 30}")
+                self.ui.VortexFitLog.append("FITTED PARAMETERS (with uncertainties):")
+                self.ui.VortexFitLog.append(f"{'=' * 30}")
+                self.ui.VortexFitLog.append(
+                    f"  Vortex center X: {x0_fit:.4f} ± {perr[0]:.4f}"
+                )
+                self.ui.VortexFitLog.append(
+                    f"  Vortex center Y: {y0_fit:.4f} ± {perr[1]:.4f}"
+                )
+                self.ui.VortexFitLog.append(
+                    f"  Circulation Γ:   {Gamma_fit:.6f} ± {perr[2]:.6f}"
+                )
+                self.ui.VortexFitLog.append(
+                    f"  Core radius rc:  {rc_fit:.6f} ± {perr[3]:.6f}"
+                )
 
             # Calculate fitted values and residuals
             v_fitted_valid = model((x_valid, y_valid), *popt)
@@ -1054,76 +1057,67 @@ class UserInterface(QtWidgets.QMainWindow):
             # Full grid prediction
             v_fitted_full = model((X, Y), *popt)
 
-            self.ui.VortexModelFit_GraphicsView.clear()
+            if plotting:
+                self.ui.VortexModelFit_GraphicsView.clear()
 
-            self.plotOriginalMeasurements(
-                data,
-                x0_fit,
-                y0_fit,
-                "Original Measurements",
-                "bwr",
-                "Velocity (m/s)",
-            )
-            self.plotOriginalMeasurements(
-                v_fitted_full,
-                x0_fit,
-                y0_fit,
-                f"Fitted {model.__name__}",
-                "twilight_shifted",
-                "Velocity (m/s)",
-            )
-            self.plotOriginalMeasurements(
-                sigma,
-                x0_fit,
-                y0_fit,
-                "Measurement Uncertainties",
-                "afmhot_r",
-                "Uncertainty (m/s)",
-            )
+                self.plotOriginalMeasurements(
+                    data,
+                    x0_fit,
+                    y0_fit,
+                    "Original Measurements",
+                    "bwr",
+                    "Velocity (m/s)",
+                )
+                self.plotOriginalMeasurements(
+                    v_fitted_full,
+                    x0_fit,
+                    y0_fit,
+                    f"Fitted {model.__name__}",
+                    "twilight_shifted",
+                    "Velocity (m/s)",
+                )
+                self.plotOriginalMeasurements(
+                    sigma,
+                    x0_fit,
+                    y0_fit,
+                    "Measurement Uncertainties",
+                    "afmhot_r",
+                    "Uncertainty (m/s)",
+                )
 
-            self.ui.VortexModelFit_GraphicsView.nextRow()
+                self.ui.VortexModelFit_GraphicsView.nextRow()
 
-            min_v = min(v_valid.min(), v_fitted_valid.min())
-            max_v = max(v_valid.max(), v_fitted_valid.max())
+                min_v = min(v_valid.min(), v_fitted_valid.min())
+                max_v = max(v_valid.max(), v_fitted_valid.max())
 
-            self.scatterPlot(
-                v_valid,
-                v_fitted_valid,
-                sigma_valid,
-                f"Fit Quality (χ²/dof={reduced_chi_squared:.2f})",
-                min_v,
-                max_v,
-            )
+                self.scatterPlot(
+                    v_valid,
+                    v_fitted_valid,
+                    sigma_valid,
+                    f"Fit Quality (χ²/dof={reduced_chi_squared:.2f})",
+                    min_v,
+                    max_v,
+                )
 
-            # self.ui.VortexFitLog.append(residuals)
-            # self.plotOriginalMeasurements(
-            #     abs(residuals),
-            #     x0_fit,
-            #     y0_fit,
-            #     "Residuals (Measured - Fitted)",
-            #     "plasma",
-            #     "Residual (m/s)"
-            # )
-            # self.plotOriginalMeasurements(
-            #     weighted_residuals,
-            #     x0_fit,
-            #     y0_fit,
-            #     "Weighted Residuals (σ units)",
-            #     "plasma",
-            #     "Weighted Residual - (Meas-Fit)/σ"
-            # )
+                self.plotResidualHistogram(weighted_residuals)
+                self.plotResidualsvsFittedValues(residuals, v_fitted_valid, sigma_valid)
 
-            self.plotResidualHistogram(weighted_residuals)
-            self.plotResidualsvsFittedValues(residuals, v_fitted_valid, sigma_valid)
+                self.ui.VortexModelFit_GraphicsView.ci.layout.setColumnStretchFactor(
+                    0, 1
+                )
+                self.ui.VortexModelFit_GraphicsView.ci.layout.setColumnStretchFactor(
+                    1, 1
+                )
+                self.ui.VortexModelFit_GraphicsView.ci.layout.setColumnStretchFactor(
+                    2, 1
+                )
 
-            self.ui.VortexModelFit_GraphicsView.ci.layout.setColumnStretchFactor(0, 1)
-            self.ui.VortexModelFit_GraphicsView.ci.layout.setColumnStretchFactor(1, 1)
-            self.ui.VortexModelFit_GraphicsView.ci.layout.setColumnStretchFactor(2, 1)
-
-            self.ui.VortexModelFit_GraphicsView.ci.layout.setRowStretchFactor(0, 1)
-            self.ui.VortexModelFit_GraphicsView.ci.layout.setRowStretchFactor(1, 1)
+                self.ui.VortexModelFit_GraphicsView.ci.layout.setRowStretchFactor(0, 1)
+                self.ui.VortexModelFit_GraphicsView.ci.layout.setRowStretchFactor(1, 1)
         else:
             self.ui.VortexFitLog.append("Fitting Failed")
+
+        return x0_fit, y0_fit, v_fitted_full
 
     def plotOriginalMeasurements(
         self, data, x0_fit, y0_fit, title, lookupTable, colorbarLabel
@@ -1248,6 +1242,58 @@ class UserInterface(QtWidgets.QMainWindow):
 
         self.ui.VortexModelFit_GraphicsView.addItem(plot)
         self.ui.VortexModelFit_GraphicsView.show()
+
+    @Slot()
+    def fitAllModels(self):
+        models = [
+            vatistas_model,
+            lamb_oseen_model,
+            rankine_model,
+            modified_rankine_model,
+            kaufmann_model,
+            burgers_model,
+            batchelor_model,
+            two_cell_model,
+        ]
+
+        currentDepth = int(self.ui.comboBox.currentText()[:-2])
+        data = self.velocitylist[currentDepth]
+        data_sigma = self.velocity_err_list[currentDepth]
+
+        for row in range(len(data)):
+            for column in range(len(data[row])):
+                if data[row][column] is None:
+                    data[row][column] = 0.0
+                else:
+                    data[row][column] = float(data[row][column])
+
+        data = np.array(data)
+
+        for row in range(len(data_sigma)):
+            for column in range(len(data_sigma[row])):
+                if data_sigma[row][column] is None:
+                    data_sigma[row][column] = 0.0
+                else:
+                    data_sigma[row][column] = float(data_sigma[row][column])
+
+        data_sigma = np.array(data_sigma)
+
+        self.ui.VortexModelFit_GraphicsView.clear()
+
+        for i in models:
+            if i is kaufmann_model:
+                self.ui.VortexModelFit_GraphicsView.nextRow()
+
+            x, y, v_fit = self.fitVortexModel(data, data_sigma, i, False)
+
+            if self.ui.showfittedplot_checkBox.isChecked():
+                self.plotOriginalMeasurements(
+                    v_fit, x, y, i.__name__, "twilight_r", "Velocity (m/s)"
+                )
+            else:
+                self.plotOriginalMeasurements(
+                    data, x, y, i.__name__, "twilight_r", "Velocity (m/s)"
+                )
 
 
 class HistogramEditDialog(Ui_Dialog, QDialog):

@@ -742,28 +742,71 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_22.addWidget(self.label_27)
 
-        self.FitModelListWidget = QListWidget(self.verticalFrame_71)
-        QListWidgetItem(self.FitModelListWidget)
-        QListWidgetItem(self.FitModelListWidget)
-        QListWidgetItem(self.FitModelListWidget)
-        QListWidgetItem(self.FitModelListWidget)
-        QListWidgetItem(self.FitModelListWidget)
-        QListWidgetItem(self.FitModelListWidget)
-        QListWidgetItem(self.FitModelListWidget)
-        QListWidgetItem(self.FitModelListWidget)
-        QListWidgetItem(self.FitModelListWidget)
-        self.FitModelListWidget.setObjectName(u"FitModelListWidget")
-        self.FitModelListWidget.setMaximumSize(QSize(300, 16777215))
+        self.fitVatistas_button = QPushButton(self.verticalFrame_71)
+        self.fitVatistas_button.setObjectName(u"fitVatistas_button")
 
-        self.verticalLayout_22.addWidget(self.FitModelListWidget)
+        self.verticalLayout_22.addWidget(self.fitVatistas_button)
+
+        self.fitLambOseen_button = QPushButton(self.verticalFrame_71)
+        self.fitLambOseen_button.setObjectName(u"fitLambOseen_button")
+
+        self.verticalLayout_22.addWidget(self.fitLambOseen_button)
+
+        self.fitRankine_button = QPushButton(self.verticalFrame_71)
+        self.fitRankine_button.setObjectName(u"fitRankine_button")
+
+        self.verticalLayout_22.addWidget(self.fitRankine_button)
+
+        self.fitModifiedRankine_button = QPushButton(self.verticalFrame_71)
+        self.fitModifiedRankine_button.setObjectName(u"fitModifiedRankine_button")
+
+        self.verticalLayout_22.addWidget(self.fitModifiedRankine_button)
+
+        self.fitKaufmann_button = QPushButton(self.verticalFrame_71)
+        self.fitKaufmann_button.setObjectName(u"fitKaufmann_button")
+
+        self.verticalLayout_22.addWidget(self.fitKaufmann_button)
+
+        self.fitBurgers_button = QPushButton(self.verticalFrame_71)
+        self.fitBurgers_button.setObjectName(u"fitBurgers_button")
+
+        self.verticalLayout_22.addWidget(self.fitBurgers_button)
+
+        self.fitSullivan_button = QPushButton(self.verticalFrame_71)
+        self.fitSullivan_button.setObjectName(u"fitSullivan_button")
+
+        self.verticalLayout_22.addWidget(self.fitSullivan_button)
+
+        self.fitBatchelor_button = QPushButton(self.verticalFrame_71)
+        self.fitBatchelor_button.setObjectName(u"fitBatchelor_button")
+
+        self.verticalLayout_22.addWidget(self.fitBatchelor_button)
+
+        self.fitTwoCell_button = QPushButton(self.verticalFrame_71)
+        self.fitTwoCell_button.setObjectName(u"fitTwoCell_button")
+
+        self.verticalLayout_22.addWidget(self.fitTwoCell_button)
+
+        self.line_2 = QFrame(self.verticalFrame_71)
+        self.line_2.setObjectName(u"line_2")
+        self.line_2.setFrameShadow(QFrame.Shadow.Plain)
+        self.line_2.setLineWidth(1)
+        self.line_2.setFrameShape(QFrame.Shape.HLine)
+
+        self.verticalLayout_22.addWidget(self.line_2)
+
+        self.showfittedplot_checkBox = QCheckBox(self.verticalFrame_71)
+        self.showfittedplot_checkBox.setObjectName(u"showfittedplot_checkBox")
+
+        self.verticalLayout_22.addWidget(self.showfittedplot_checkBox)
+
+        self.fitAllModels_button = QPushButton(self.verticalFrame_71)
+        self.fitAllModels_button.setObjectName(u"fitAllModels_button")
+
+        self.verticalLayout_22.addWidget(self.fitAllModels_button)
 
 
         self.verticalLayout_20.addWidget(self.verticalFrame_71)
-
-        self.doVortexModelFitButton = QPushButton(self.horizontalLayoutWidget_4)
-        self.doVortexModelFitButton.setObjectName(u"doVortexModelFitButton")
-
-        self.verticalLayout_20.addWidget(self.doVortexModelFitButton)
 
         self.VortexFitLog = QTextEdit(self.horizontalLayoutWidget_4)
         self.VortexFitLog.setObjectName(u"VortexFitLog")
@@ -876,31 +919,18 @@ class Ui_MainWindow(object):
         self.Fit_All_Histograms_Button.setText(QCoreApplication.translate("MainWindow", u"Fit All Histograms", None))
         self.label_26.setText(QCoreApplication.translate("MainWindow", u"Depth:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.DataViewTab), QCoreApplication.translate("MainWindow", u"Data View", None))
-        self.label_27.setText(QCoreApplication.translate("MainWindow", u"Model:", None))
-
-        __sortingEnabled1 = self.FitModelListWidget.isSortingEnabled()
-        self.FitModelListWidget.setSortingEnabled(False)
-        ___qlistwidgetitem = self.FitModelListWidget.item(0)
-        ___qlistwidgetitem.setText(QCoreApplication.translate("MainWindow", u"Vatistas", None));
-        ___qlistwidgetitem1 = self.FitModelListWidget.item(1)
-        ___qlistwidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Lamb-Oseen", None));
-        ___qlistwidgetitem2 = self.FitModelListWidget.item(2)
-        ___qlistwidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Rankine", None));
-        ___qlistwidgetitem3 = self.FitModelListWidget.item(3)
-        ___qlistwidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Modified Rankine (Smooth transition)", None));
-        ___qlistwidgetitem4 = self.FitModelListWidget.item(4)
-        ___qlistwidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Kaufmann/Scully", None));
-        ___qlistwidgetitem5 = self.FitModelListWidget.item(5)
-        ___qlistwidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Burgers", None));
-        ___qlistwidgetitem6 = self.FitModelListWidget.item(6)
-        ___qlistwidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Sullivan", None));
-        ___qlistwidgetitem7 = self.FitModelListWidget.item(7)
-        ___qlistwidgetitem7.setText(QCoreApplication.translate("MainWindow", u"Batchelor", None));
-        ___qlistwidgetitem8 = self.FitModelListWidget.item(8)
-        ___qlistwidgetitem8.setText(QCoreApplication.translate("MainWindow", u"Two-Cell", None));
-        self.FitModelListWidget.setSortingEnabled(__sortingEnabled1)
-
-        self.doVortexModelFitButton.setText(QCoreApplication.translate("MainWindow", u"Do Fit", None))
+        self.label_27.setText(QCoreApplication.translate("MainWindow", u"Fit Model:", None))
+        self.fitVatistas_button.setText(QCoreApplication.translate("MainWindow", u"Vatistas", None))
+        self.fitLambOseen_button.setText(QCoreApplication.translate("MainWindow", u"Lamb-Oseen", None))
+        self.fitRankine_button.setText(QCoreApplication.translate("MainWindow", u"Rankine", None))
+        self.fitModifiedRankine_button.setText(QCoreApplication.translate("MainWindow", u"Modified Rankine (Smooth transition)", None))
+        self.fitKaufmann_button.setText(QCoreApplication.translate("MainWindow", u"Kaufmann/Scully", None))
+        self.fitBurgers_button.setText(QCoreApplication.translate("MainWindow", u"Burgers", None))
+        self.fitSullivan_button.setText(QCoreApplication.translate("MainWindow", u"Sullivan", None))
+        self.fitBatchelor_button.setText(QCoreApplication.translate("MainWindow", u"Batchelor", None))
+        self.fitTwoCell_button.setText(QCoreApplication.translate("MainWindow", u"Two-Cell", None))
+        self.showfittedplot_checkBox.setText(QCoreApplication.translate("MainWindow", u"Show Fitted Plot", None))
+        self.fitAllModels_button.setText(QCoreApplication.translate("MainWindow", u"Fit all", None))
         self.label_28.setText(QCoreApplication.translate("MainWindow", u"Reduced Chi-Square:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.ModelFitTab), QCoreApplication.translate("MainWindow", u"Model Fit", None))
         self.horizontalTabWidget.setTabText(self.horizontalTabWidget.indexOf(self.Vortex), QCoreApplication.translate("MainWindow", u"Vortex", None))

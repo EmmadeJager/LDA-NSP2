@@ -1056,73 +1056,101 @@
               <item>
                <widget class="QLabel" name="label_27">
                 <property name="text">
-                 <string>Model:</string>
+                 <string>Fit Model:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QListWidget" name="FitModelListWidget">
-                <property name="maximumSize">
-                 <size>
-                  <width>300</width>
-                  <height>16777215</height>
-                 </size>
+               <widget class="QPushButton" name="fitVatistas_button">
+                <property name="text">
+                 <string>Vatistas</string>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>Vatistas</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Lamb-Oseen</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Rankine</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Modified Rankine (Smooth transition)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Kaufmann/Scully</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Burgers</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Sullivan</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Batchelor</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Two-Cell</string>
-                 </property>
-                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fitLambOseen_button">
+                <property name="text">
+                 <string>Lamb-Oseen</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fitRankine_button">
+                <property name="text">
+                 <string>Rankine</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fitModifiedRankine_button">
+                <property name="text">
+                 <string>Modified Rankine (Smooth transition)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fitKaufmann_button">
+                <property name="text">
+                 <string>Kaufmann/Scully</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fitBurgers_button">
+                <property name="text">
+                 <string>Burgers</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fitSullivan_button">
+                <property name="text">
+                 <string>Sullivan</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fitBatchelor_button">
+                <property name="text">
+                 <string>Batchelor</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fitTwoCell_button">
+                <property name="text">
+                 <string>Two-Cell</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="Line" name="line_2">
+                <property name="frameShadow">
+                 <enum>QFrame::Shadow::Plain</enum>
+                </property>
+                <property name="lineWidth">
+                 <number>1</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="showfittedplot_checkBox">
+                <property name="text">
+                 <string>Show Fitted Plot</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fitAllModels_button">
+                <property name="text">
+                 <string>Fit all</string>
+                </property>
                </widget>
               </item>
              </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="doVortexModelFitButton">
-             <property name="text">
-              <string>Do Fit</string>
-             </property>
             </widget>
            </item>
            <item>
