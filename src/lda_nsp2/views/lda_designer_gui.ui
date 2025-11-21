@@ -576,6 +576,9 @@
       <string>Vortex</string>
      </attribute>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -586,6 +589,18 @@
       </property>
       <property name="currentIndex">
        <number>2</number>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::TextElideMode::ElideNone</enum>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="movable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
       </property>
       <widget class="QWidget" name="DataIngestionTab">
        <attribute name="title">
@@ -1025,7 +1040,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>2051</width>
+          <width>2123</width>
           <height>1061</height>
          </rect>
         </property>
@@ -1046,34 +1061,58 @@
                </widget>
               </item>
               <item>
-               <widget class="QRadioButton" name="fittingModel_radioButton">
-                <property name="text">
-                 <string>Lamb-Oseen Vortex</string>
+               <widget class="QListWidget" name="FitModelListWidget">
+                <property name="maximumSize">
+                 <size>
+                  <width>300</width>
+                  <height>16777215</height>
+                 </size>
                 </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="fittingModel_radioButton_2">
-                <property name="text">
-                 <string>Rankine Vortex</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="fittingModel_radioButton_3">
-                <property name="text">
-                 <string>Kaufmann Vortex</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="radioButton">
-                <property name="text">
-                 <string>Multimodel Vortex</string>
-                </property>
+                <item>
+                 <property name="text">
+                  <string>Vatistas</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Lamb-Oseen</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Rankine</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Modified Rankine (Smooth transition)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Kaufmann/Scully</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Burgers</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Sullivan</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Batchelor</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Two-Cell</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -1087,17 +1126,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Orientation::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
+            <widget class="QTextEdit" name="VortexFitLog"/>
            </item>
            <item>
             <widget class="QLabel" name="label_28">
@@ -1111,6 +1140,9 @@
              <property name="frameShape">
               <enum>QFrame::Shape::StyledPanel</enum>
              </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::SegmentStyle::Flat</enum>
+             </property>
             </widget>
            </item>
           </layout>
@@ -1118,7 +1150,14 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_21">
            <item>
-            <widget class="GraphicsLayoutWidget" name="VortexModelFit_GraphicsView"/>
+            <widget class="GraphicsLayoutWidget" name="VortexModelFit_GraphicsView">
+             <property name="minimumSize">
+              <size>
+               <width>1800</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

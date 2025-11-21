@@ -18,9 +18,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QFrame, QHBoxLayout, QHeaderView, QLCDNumber,
     QLabel, QLayout, QListWidget, QListWidgetItem,
-    QMainWindow, QMenuBar, QPushButton, QRadioButton,
-    QSizePolicy, QSpacerItem, QSpinBox, QStatusBar,
-    QTabWidget, QTableWidget, QTableWidgetItem, QVBoxLayout,
+    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
+    QSpacerItem, QSpinBox, QStatusBar, QTabWidget,
+    QTableWidget, QTableWidgetItem, QTextEdit, QVBoxLayout,
     QWidget)
 
 from pyqtgraph import (GraphicsLayoutWidget, PlotWidget)
@@ -414,7 +414,12 @@ class Ui_MainWindow(object):
         self.Vortex.setObjectName(u"Vortex")
         self.tabWidget = QTabWidget(self.Vortex)
         self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setEnabled(True)
         self.tabWidget.setGeometry(QRect(0, 0, 2061, 1091))
+        self.tabWidget.setElideMode(Qt.TextElideMode.ElideNone)
+        self.tabWidget.setTabsClosable(False)
+        self.tabWidget.setMovable(False)
+        self.tabWidget.setTabBarAutoHide(False)
         self.DataIngestionTab = QWidget()
         self.DataIngestionTab.setObjectName(u"DataIngestionTab")
         self.verticalLayoutWidget = QWidget(self.DataIngestionTab)
@@ -721,7 +726,7 @@ class Ui_MainWindow(object):
         self.ModelFitTab.setObjectName(u"ModelFitTab")
         self.horizontalLayoutWidget_4 = QWidget(self.ModelFitTab)
         self.horizontalLayoutWidget_4.setObjectName(u"horizontalLayoutWidget_4")
-        self.horizontalLayoutWidget_4.setGeometry(QRect(0, 0, 2051, 1061))
+        self.horizontalLayoutWidget_4.setGeometry(QRect(0, 0, 2123, 1061))
         self.horizontalLayout_17 = QHBoxLayout(self.horizontalLayoutWidget_4)
         self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
         self.horizontalLayout_17.setContentsMargins(0, 0, 0, 0)
@@ -737,26 +742,20 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_22.addWidget(self.label_27)
 
-        self.fittingModel_radioButton = QRadioButton(self.verticalFrame_71)
-        self.fittingModel_radioButton.setObjectName(u"fittingModel_radioButton")
-        self.fittingModel_radioButton.setChecked(True)
+        self.FitModelListWidget = QListWidget(self.verticalFrame_71)
+        QListWidgetItem(self.FitModelListWidget)
+        QListWidgetItem(self.FitModelListWidget)
+        QListWidgetItem(self.FitModelListWidget)
+        QListWidgetItem(self.FitModelListWidget)
+        QListWidgetItem(self.FitModelListWidget)
+        QListWidgetItem(self.FitModelListWidget)
+        QListWidgetItem(self.FitModelListWidget)
+        QListWidgetItem(self.FitModelListWidget)
+        QListWidgetItem(self.FitModelListWidget)
+        self.FitModelListWidget.setObjectName(u"FitModelListWidget")
+        self.FitModelListWidget.setMaximumSize(QSize(300, 16777215))
 
-        self.verticalLayout_22.addWidget(self.fittingModel_radioButton)
-
-        self.fittingModel_radioButton_2 = QRadioButton(self.verticalFrame_71)
-        self.fittingModel_radioButton_2.setObjectName(u"fittingModel_radioButton_2")
-
-        self.verticalLayout_22.addWidget(self.fittingModel_radioButton_2)
-
-        self.fittingModel_radioButton_3 = QRadioButton(self.verticalFrame_71)
-        self.fittingModel_radioButton_3.setObjectName(u"fittingModel_radioButton_3")
-
-        self.verticalLayout_22.addWidget(self.fittingModel_radioButton_3)
-
-        self.radioButton = QRadioButton(self.verticalFrame_71)
-        self.radioButton.setObjectName(u"radioButton")
-
-        self.verticalLayout_22.addWidget(self.radioButton)
+        self.verticalLayout_22.addWidget(self.FitModelListWidget)
 
 
         self.verticalLayout_20.addWidget(self.verticalFrame_71)
@@ -766,9 +765,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_20.addWidget(self.doVortexModelFitButton)
 
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.VortexFitLog = QTextEdit(self.horizontalLayoutWidget_4)
+        self.VortexFitLog.setObjectName(u"VortexFitLog")
 
-        self.verticalLayout_20.addItem(self.verticalSpacer_4)
+        self.verticalLayout_20.addWidget(self.VortexFitLog)
 
         self.label_28 = QLabel(self.horizontalLayoutWidget_4)
         self.label_28.setObjectName(u"label_28")
@@ -778,6 +778,7 @@ class Ui_MainWindow(object):
         self.lcdNumber = QLCDNumber(self.horizontalLayoutWidget_4)
         self.lcdNumber.setObjectName(u"lcdNumber")
         self.lcdNumber.setFrameShape(QFrame.Shape.StyledPanel)
+        self.lcdNumber.setSegmentStyle(QLCDNumber.SegmentStyle.Flat)
 
         self.verticalLayout_20.addWidget(self.lcdNumber)
 
@@ -788,6 +789,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.VortexModelFit_GraphicsView = GraphicsLayoutWidget(self.horizontalLayoutWidget_4)
         self.VortexModelFit_GraphicsView.setObjectName(u"VortexModelFit_GraphicsView")
+        self.VortexModelFit_GraphicsView.setMinimumSize(QSize(1800, 0))
 
         self.verticalLayout_21.addWidget(self.VortexModelFit_GraphicsView)
 
@@ -875,10 +877,29 @@ class Ui_MainWindow(object):
         self.label_26.setText(QCoreApplication.translate("MainWindow", u"Depth:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.DataViewTab), QCoreApplication.translate("MainWindow", u"Data View", None))
         self.label_27.setText(QCoreApplication.translate("MainWindow", u"Model:", None))
-        self.fittingModel_radioButton.setText(QCoreApplication.translate("MainWindow", u"Lamb-Oseen Vortex", None))
-        self.fittingModel_radioButton_2.setText(QCoreApplication.translate("MainWindow", u"Rankine Vortex", None))
-        self.fittingModel_radioButton_3.setText(QCoreApplication.translate("MainWindow", u"Kaufmann Vortex", None))
-        self.radioButton.setText(QCoreApplication.translate("MainWindow", u"Multimodel Vortex", None))
+
+        __sortingEnabled1 = self.FitModelListWidget.isSortingEnabled()
+        self.FitModelListWidget.setSortingEnabled(False)
+        ___qlistwidgetitem = self.FitModelListWidget.item(0)
+        ___qlistwidgetitem.setText(QCoreApplication.translate("MainWindow", u"Vatistas", None));
+        ___qlistwidgetitem1 = self.FitModelListWidget.item(1)
+        ___qlistwidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Lamb-Oseen", None));
+        ___qlistwidgetitem2 = self.FitModelListWidget.item(2)
+        ___qlistwidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Rankine", None));
+        ___qlistwidgetitem3 = self.FitModelListWidget.item(3)
+        ___qlistwidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Modified Rankine (Smooth transition)", None));
+        ___qlistwidgetitem4 = self.FitModelListWidget.item(4)
+        ___qlistwidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Kaufmann/Scully", None));
+        ___qlistwidgetitem5 = self.FitModelListWidget.item(5)
+        ___qlistwidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Burgers", None));
+        ___qlistwidgetitem6 = self.FitModelListWidget.item(6)
+        ___qlistwidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Sullivan", None));
+        ___qlistwidgetitem7 = self.FitModelListWidget.item(7)
+        ___qlistwidgetitem7.setText(QCoreApplication.translate("MainWindow", u"Batchelor", None));
+        ___qlistwidgetitem8 = self.FitModelListWidget.item(8)
+        ___qlistwidgetitem8.setText(QCoreApplication.translate("MainWindow", u"Two-Cell", None));
+        self.FitModelListWidget.setSortingEnabled(__sortingEnabled1)
+
         self.doVortexModelFitButton.setText(QCoreApplication.translate("MainWindow", u"Do Fit", None))
         self.label_28.setText(QCoreApplication.translate("MainWindow", u"Reduced Chi-Square:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.ModelFitTab), QCoreApplication.translate("MainWindow", u"Model Fit", None))

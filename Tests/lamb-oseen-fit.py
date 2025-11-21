@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 # Your data
 data = [
-    [0.0, 1.55190864, 1.73089824, 17.66877074, 2.31217222, 0.0, 0.0, 0.0, 0.0, 0.0],
+    [3.19418509, 1.55190864, 1.73089824, 17.66877074, 2.31217222, 0.0, 0.0, 0.0, 0.0, 0.0],
     [
         1.30491845,
         4.57097047,
@@ -29,9 +29,9 @@ data = [
         0.0,
         0.0,
     ],
-    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    [3.19418509, 1.55190864, 1.73089824, 17.66877074, 2.31217222, 0.0, 0.0, 0.0, 0.0, 0.0],
+    [1.30491845, 4.57097047, 1.33108394, 1.54017677, 1.21102433, 0.0, 0.0, 0.0, 0.0, 0.0],
+    [2.04938629, 4.84838525, 2.83959439, 1.21933811, 0.67835976, 0.0, 0.0, 0.0, 0.0, 0.0],
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -118,7 +118,7 @@ v_max = np.max(np.abs(v_valid))
 rc_guess = 0.5
 Gamma_guess = v_max * 2 * np.pi * rc_guess / 0.715
 
-print(f"\nInitial guesses:")
+print("\nInitial guesses:")
 print(f"  Center: ({x0_guess:.2f}, {y0_guess:.2f})")
 print(f"  Γ: {Gamma_guess:.4f}")
 print(f"  rc: {rc_guess:.4f}")
@@ -153,7 +153,7 @@ if result.success:
     x0_fit, y0_fit, Gamma_fit, rc_fit = popt
 
     print(f"\n{'=' * 50}")
-    print(f"FITTED PARAMETERS:")
+    print("FITTED PARAMETERS:")
     print(f"{'=' * 50}")
     print(f"  Vortex center: ({x0_fit:.4f}, {y0_fit:.4f})")
     print(f"  Circulation Γ: {Gamma_fit:.6f}")
@@ -173,7 +173,7 @@ if result.success:
         perr = np.sqrt(np.diag(pcov))
         x0_fit, y0_fit, Gamma_fit, rc_fit = popt_refined
 
-        print(f"\nREFINED PARAMETERS:")
+        print("\nREFINED PARAMETERS:")
         print(
             f"  Vortex center: ({x0_fit:.4f} ± {perr[0]:.4f}, {y0_fit:.4f} ± {perr[1]:.4f})"
         )
@@ -190,7 +190,7 @@ if result.success:
     rmse = np.sqrt(np.mean(residuals**2))
     r_squared = 1 - np.sum(residuals**2) / np.sum((v_valid - np.mean(v_valid)) ** 2)
 
-    print(f"\nFIT QUALITY:")
+    print("\nFIT QUALITY:")
     print(f"  RMSE: {rmse:.6f}")
     print(f"  R²: {r_squared:.4f}")
 
@@ -277,7 +277,7 @@ if result.success:
 
     # Print comparison table
     print(f"\n{'=' * 60}")
-    print(f"MEASUREMENT COMPARISON:")
+    print("MEASUREMENT COMPARISON:")
     print(f"{'=' * 60}")
     print(f"{'X':>6} {'Y':>6} {'Measured':>12} {'Fitted':>12} {'Residual':>12}")
     print(f"{'-' * 60}")
