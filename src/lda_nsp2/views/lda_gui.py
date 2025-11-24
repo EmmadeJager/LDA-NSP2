@@ -1,3 +1,6 @@
+# Hoofdcode voor het analyseren van frequentiedata uit LabView, gemeten aan de bovenkant van een 
+# vortex met LDA, en het fitten aan een vortexmodel en simuleren van een heatmap als stroomprofiel.
+
 import sys
 from pgcolorbar.colorlegend import ColorLegendItem
 
@@ -27,10 +30,11 @@ from lda_nsp2.views.lda_vortex_histogram_edit_dialog import Ui_Dialog
 from lda_nsp2.models.filters import lowpass, highpass
 from scipy.optimize import differential_evolution, curve_fit
 
+# definieer configuratie voor user interface layout
 pg.setConfigOption("background", 0.2)
 pg.setConfigOption("foreground", 0.5)
 
-
+# class voor het maken van de GUI
 class UserInterface(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -67,14 +71,14 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.graphicsView_2.showGrid(x=True, y=True, alpha=0.9)
         # self.ui.graphicsView_3.showGrid(x=True, y=True, alpha=0.9)
 
-        # Initialise a hashtable for 200 different vortex measurements
+        # Initialiseer een hashtable voor 200 verschillende vortex metingen
         self.vortex_master_data = []
         for i in range(200):
             self.vortex_master_data.append(None)
 
         self.currently_selected_vortex_histogram = None
 
-        # Vortex Button Bindings
+        # bind knoppen aan functie
         self.ui.ImportSingleButton.clicked.connect(self.ingest_vortex_histogram)
         self.ui.ImportMultipleButton.clicked.connect(
             self.ingest_multiple_vortex_histograms
@@ -116,6 +120,8 @@ class UserInterface(QtWidgets.QMainWindow):
 
         self.ui.fitAllModels_button.clicked.connect(self.fitAllModels)
 
+    # slots voor functies definieren (functie van verschillende knoppen)
+    # slot voor data in GUI stoppen
     @Slot()
     def ingest_data_to_gui(self):
         fileName = QtWidgets.QFileDialog.getOpenFileName(self, ("Import data"), "")
@@ -133,16 +139,19 @@ class UserInterface(QtWidgets.QMainWindow):
             self.data[0][self.data[1].index(max(self.data[1]))]
         )
 
+    # slot om de fit te maken
     @Slot()
     def do_fit(self):
         if not self.data:
             self.error_modal("Please import data before fitting.")
             return
-
+        
+        # guess parameters
         A_guess = self.ui.param1_guess_spinbox.value()
         B_guess = self.ui.param2_guess_spinbox.value()
         C_guess = self.ui.param3_guess_spinbox.value()
 
+        # neem data voor fit
         fit_data = gaussfit(self.data[0], self.data[1], A_guess, B_guess, C_guess)
 
         self.fit_A = fit_data[0]
@@ -159,22 +168,26 @@ class UserInterface(QtWidgets.QMainWindow):
 
         self.ui.graphicsView.plot(self.data[0], fit_data[3])
 
+    # slot om snelheid te berekenen
     @Slot()
     def calc_velocity(self):
         if not self.fit_C:
             self.error_modal("Please fit before calculating the velocity.")
             return
-
+        
+        # geef afstanden mee
         x = self.ui.x_measurement_spinbox.value()
         y = self.ui.y_measurement_spinbox.value()
         z = self.ui.z_measurement_spinbox.value()
         f = self.fit_C
-
+        
+        # geef fouten mee
         x_err = self.ui.x_uncertainty_spinbox.value()
         y_err = self.ui.y_uncertainty_spinbox.value()
         z_err = self.ui.z_uncertainty_spinbox.value()
         f_err = 100
-
+        
+        # bereken resultaten
         results = bereken_v(x, y, z, f, x_err, y_err, z_err, f_err)
 
         self.ui.velocity_lcd.display(results[2])
@@ -183,6 +196,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self.current_velocity_result = results[2]
         self.current_velocity_uncertainty = results[3]
 
+    # geef error
     def error_modal(self, text):
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
@@ -191,6 +205,7 @@ class UserInterface(QtWidgets.QMainWindow):
         msg.setWindowTitle("Error")
         msg.exec_()
 
+    # slot voor refractie
     @Slot()
     def check_refraction_checkbox(self):
         self.ui.refraction_coefficient_spinbox.setEnabled(
@@ -199,7 +214,8 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.refraction_coefficient_spinbox.setEnabled(
             self.ui.refraction_correction_checkbox.isChecked()
         )
-
+ 
+    # voeg toe aan tabel
     @Slot()
     def add_to_table(self):
         if not self.current_velocity_result:
@@ -219,6 +235,7 @@ class UserInterface(QtWidgets.QMainWindow):
             self.parabola_list_depth, self.parabola_list_velo, pen=None, symbol="o"
         )
 
+    # doe fit aan parabool (stroomprofiel)
     @Slot()
     def parabola_fit(self):
         results = parabfit(
@@ -230,6 +247,7 @@ class UserInterface(QtWidgets.QMainWindow):
 
         print(parab_fit_A, parab_fit_B, parab_fit_C)
 
+    # maak histogram van geingesteerde data
     @Slot()
     def ingest_vortex_histogram(self):
         # Open file-choosing modal
@@ -246,7 +264,7 @@ class UserInterface(QtWidgets.QMainWindow):
 
         self.plothistogram(x, y)
 
-        # Name of file without preceding path
+        # noem een bestand zonder preceding pad
         fileNameWOPath = fileName.split("/")[-1]
 
         # Add Name of file to list widget
@@ -260,6 +278,7 @@ class UserInterface(QtWidgets.QMainWindow):
 
         fileCoords = [int(i) for i in fileCoordsNumbers.split(",")]
 
+        # coordinaten
         x_value = 50 + 22 + 8.5 * fileCoords[1]
         y_value = 18.5
         if fileCoords[1] == 0:
@@ -277,10 +296,11 @@ class UserInterface(QtWidgets.QMainWindow):
         fileCoords.append(y_value)
         fileCoords.append(z)
 
-        # save histogram to memory
+        # bewaar histogram in geheugen
         hashTableAddress = int(list(fileNameWOPath)[-2] + list(fileNameWOPath)[-1])
         self.vortex_master_data[hashTableAddress] = [[x, y], fileCoords]
 
+    # meerdere histogrammen
     @Slot()
     def ingest_multiple_vortex_histograms(self):
         # Open file-choosing modal
@@ -345,6 +365,7 @@ class UserInterface(QtWidgets.QMainWindow):
 
         self.ui.listWidget.setCurrentRow(0)
 
+    # herteken histogram
     @Slot()
     def redraw_vortex_histogram(self, reset_filters=True):
         datasetName = self.ui.listWidget.currentItem().text()
@@ -361,6 +382,7 @@ class UserInterface(QtWidgets.QMainWindow):
 
         self.plothistogram(x, y, reset_filters)
 
+    # verwijder histogram
     @Slot()
     def delete_vortex_histogram(self):
         self.vortex_master_data[self.currently_selected_vortex_histogram] = None
@@ -392,6 +414,7 @@ class UserInterface(QtWidgets.QMainWindow):
         )
         self.ui.graphicsView_3.addItem(bgi)
 
+    # optie tot lowpass filter
     def applylowpassfilter(self):
         if self.ui.LowPassFilterCheckBox.isChecked():
             x = self.current_histogram_x
@@ -469,6 +492,7 @@ class UserInterface(QtWidgets.QMainWindow):
                     filterplot_range, filterplot_y_highpass, pen="g"
                 )
 
+    # optie tot highpassfilter
     def applyHighpassfilter(self):
         if self.ui.HighPassFilterCheckBox.isChecked():
             x = self.current_histogram_x

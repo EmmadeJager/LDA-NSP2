@@ -1,14 +1,16 @@
+# code voor het fitten van histrogram-frequentie data uit LabView aan een Gaussfit.
 import numpy as np
 from scipy.optimize import curve_fit
 
-
+# definieer Gauss-functie
 def Gauss(x, A, B, slide):
     return A * np.exp(-B * (x - slide) ** 2)
 
-
+# definieer Gaussfit
 def gaussfit(xvals, yvals, A_guess, B_guess, C_guess):
     data = [xvals, yvals]
 
+    # neem parameters (met guess)
     parameters, _ = curve_fit(
         Gauss,
         data[0],
@@ -21,14 +23,15 @@ def gaussfit(xvals, yvals, A_guess, B_guess, C_guess):
 
     return fit_A, fit_B, fit_C, fit_y
 
-
+# definieer parabool-functie
 def parabola(x, a, b, c):
     return a * x**2 + b * x + c
 
-
+# definieer parabool-fit
 def parabfit(xvals, yvals, A_guess, B_guess, C_guess):
     data = [xvals, yvals]
 
+    # neem parameters
     parameters, _ = curve_fit(
         parabola,
         data[0],
