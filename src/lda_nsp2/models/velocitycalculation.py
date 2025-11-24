@@ -1,5 +1,6 @@
-import numpy as np
+# code om v te bereken met foutenberekening
 
+import numpy as np
 
 # functie om v te berekenen bij bepaalde frequentie en afstanden
 def bereken_v(x, y, z, f, delta_x, delta_y, delta_z, delta_f):

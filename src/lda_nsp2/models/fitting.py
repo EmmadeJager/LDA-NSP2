@@ -1,4 +1,6 @@
-# code voor het fitten van histrogram-frequentie data uit LabView aan een Gaussfit.
+# code voor het fitten van histrogram-frequentie data uit LabView aan een Gaussfit. Met verschillende
+# fit functies voor het fitten van een vortexmodel.
+
 import numpy as np
 from scipy.optimize import curve_fit
 
@@ -46,9 +48,8 @@ def parabfit(xvals, yvals, A_guess, B_guess, C_guess):
 
     return fit_A, fit_B, fit_C, fit_y, fit_x
 
-
 def lamb_oseen_model(xy, x0, y0, Gamma, rc):
-    """Lamb-Oseen vortex fitting function"""
+    """Lamb-Oseen vortex fit-functie"""
     x, y = xy
 
     dx = x - x0
@@ -62,11 +63,9 @@ def lamb_oseen_model(xy, x0, y0, Gamma, rc):
 
     return np.abs(v_measured)
 
-
 def rankine_model(xy, x0, y0, Gamma, rc):
-    """Rankine (combined) vortex fitting function
-
-    Solid body rotation inside core, potential flow outside
+    """Rankine (samengesteld) vortex fitfunctie.
+    Laminente rotatie in het middel en potentiele ruis daarbuiten.
     """
     x, y = xy
 
@@ -75,12 +74,12 @@ def rankine_model(xy, x0, y0, Gamma, rc):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Rankine vortex: piecewise definition
+    # Rankine vortex
     v_tangential = np.where(
         r <= rc,
-        # Inside: solid body rotation
+        # Binnen: laminente rotatie
         (Gamma * r) / (2 * np.pi * rc**2),
-        # Outside: potential flow
+        # Buiten: potentiele ruis
         Gamma / (2 * np.pi * r),
     )
 
@@ -89,11 +88,9 @@ def rankine_model(xy, x0, y0, Gamma, rc):
 
     return np.abs(v_measured)
 
-
 def kaufmann_model(xy, x0, y0, Gamma, rc):
-    """Kaufmann (Scully) vortex fitting function
-
-    Smooth transition through core region
+    """Kaufmann vortex fitfunctie.
+    Gladde transitie door de middenregio.
     """
     x, y = xy
 
@@ -102,7 +99,7 @@ def kaufmann_model(xy, x0, y0, Gamma, rc):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Kaufmann vortex: smooth rational function
+    # Kaufmann vortex
     v_tangential = (Gamma / (2 * np.pi)) * (r / (r**2 + rc**2))
 
     theta = np.arctan2(dy, dx)
@@ -112,13 +109,13 @@ def kaufmann_model(xy, x0, y0, Gamma, rc):
 
 
 def vatistas_model(xy, x0, y0, Gamma, rc, n=1.0):
-    """Vatistas vortex - generalized model with shape parameter n
+    """Vatistas vortex - gegeneraliseerd model met vorm-parameter n
 
     n=1: Scully/Kaufmann vortex
-    n=2: Lamb-Oseen-like
+    n=2: Lamb-Oseen
     n→∞: Rankine vortex
 
-    Useful for finding the "best" vortex shape for your data
+    Te gebruiken voor het vinden van de "beste" vortexvorm voor data.
     """
     x, y = xy
 
@@ -127,7 +124,7 @@ def vatistas_model(xy, x0, y0, Gamma, rc, n=1.0):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Vatistas formula
+    # Vatistas formule
     v_tangential = (Gamma / (2 * np.pi * r)) * (r**n / (r**n + rc**n)) ** (1 / n)
 
     theta = np.arctan2(dy, dx)
@@ -135,11 +132,9 @@ def vatistas_model(xy, x0, y0, Gamma, rc, n=1.0):
 
     return np.abs(v_measured)
 
-
 def burgers_model(xy, x0, y0, Gamma, rc):
-    """Burgers vortex - includes axial strain effects
-
-    Good for: Vortices in strained flows, stretching vortices
+    """Burgers vortex - inclusief axesincludes axiale rekeffecten
+    Werkt voor: gerekte vortexen. Lijkt op lamb-oseen maar anders exponentieel.
     """
     x, y = xy
 
@@ -148,8 +143,8 @@ def burgers_model(xy, x0, y0, Gamma, rc):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Burgers vortex (similar to Lamb-Oseen but different exponential)
-    alpha = 1.25643  # Burgers parameter (can be fitted)
+    # Burgers vortex
+    alpha = 1.25643  # Burgers parameter
     v_tangential = (Gamma / (2 * np.pi * r)) * (1 - np.exp(-alpha * r**2 / rc**2))
 
     theta = np.arctan2(dy, dx)
@@ -157,11 +152,9 @@ def burgers_model(xy, x0, y0, Gamma, rc):
 
     return np.abs(v_measured)
 
-
 def sullivan_model(xy, x0, y0, Gamma, rc):
-    """Sullivan vortex - smooth Rankine variant
-
-    Good compromise between Rankine and Lamb-Oseen
+    """Sullivan vortex - gladde Rankine variant.
+    Goede compromie tussen Rankine en Lamb-Oseen.
     """
     x, y = xy
 
@@ -170,7 +163,7 @@ def sullivan_model(xy, x0, y0, Gamma, rc):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Sullivan formula (hyperbolic tangent transition)
+    # Sullivan formula
     v_tangential = (Gamma / (2 * np.pi * r)) * np.tanh(r / rc)
 
     theta = np.arctan2(dy, dx)
