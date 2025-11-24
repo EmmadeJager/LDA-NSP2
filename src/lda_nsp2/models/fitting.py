@@ -163,7 +163,7 @@ def sullivan_model(xy, x0, y0, Gamma, rc):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Sullivan formula
+    # Sullivan formule
     v_tangential = (Gamma / (2 * np.pi * r)) * np.tanh(r / rc)
 
     theta = np.arctan2(dy, dx)
@@ -175,9 +175,9 @@ def sullivan_model(xy, x0, y0, Gamma, rc):
 def batchelor_model(xy, x0, y0, Gamma, rc, q=2.0):
     """Batchelor (q-vortex) model
 
-    q=2: Standard Gaussian profile
-    q>2: More concentrated core
-    q<2: More diffuse core
+    q=2: Standaar Gaussisch profiel
+    q>2: Geconcentreerd middelpunt
+    q<2: Meer diffuus middelpunt
     """
     x, y = xy
 
@@ -196,10 +196,10 @@ def batchelor_model(xy, x0, y0, Gamma, rc, q=2.0):
 
 
 def modified_rankine_model(xy, x0, y0, Gamma, rc, delta=0.1):
-    """Modified Rankine - smooth transition region
+    """Modified Rankine - gladde transitie regio
 
-    delta: transition width (fraction of rc)
-    delta→0: approaches sharp Rankine
+    delta: transitie weidte (fractie van rc)
+    delta→0: dichtbij scherpe rankine
     """
     x, y = xy
 
@@ -208,10 +208,10 @@ def modified_rankine_model(xy, x0, y0, Gamma, rc, delta=0.1):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Smooth transition using tanh
+    # gladde transitie met tanh
     transition = 0.5 * (1 + np.tanh((r - rc) / (delta * rc)))
 
-    # Blend between inner and outer
+    # transitie tussen binnen en buiten
     v_inner = (Gamma * r) / (2 * np.pi * rc**2)
     v_outer = Gamma / (2 * np.pi * r)
     v_tangential = v_inner * (1 - transition) + v_outer * transition
@@ -223,10 +223,10 @@ def modified_rankine_model(xy, x0, y0, Gamma, rc, delta=0.1):
 
 
 def two_cell_model(xy, x0, y0, Gamma, rc, beta=0.2):
-    """Two-cell vortex - counter-rotating inner core
+    """2-cel vortex - omgedraaide roterende middelpunt
 
-    beta: strength of counter-rotating core (typically 0.1-0.3)
-    Good for: Wake vortices, tornado-like structures
+    beta: strekte van roterend middelpunt (typisch 0.1-0.3)
+    Goed voor: tornado-achtige vortexen
     """
     x, y = xy
 
@@ -235,7 +235,7 @@ def two_cell_model(xy, x0, y0, Gamma, rc, beta=0.2):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Two-cell structure
+    # 2-cel structuur
     v_tangential = (Gamma / (2 * np.pi * r)) * (
         (1 + beta) * (1 - np.exp(-(r**2) / rc**2))
         - beta * (1 - np.exp(-4 * r**2 / rc**2))
