@@ -1,6 +1,4 @@
-"""
-In this example we draw two different kinds of histogram.
-"""
+# Test-code voor de heatmap
 
 import numpy as np
 

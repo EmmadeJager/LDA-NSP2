@@ -1,3 +1,5 @@
+# test code voor lamb oseen fit
+
 import numpy as np
 from scipy.optimize import curve_fit, differential_evolution
 import matplotlib.pyplot as plt

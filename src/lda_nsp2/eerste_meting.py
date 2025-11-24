@@ -1,5 +1,4 @@
-"""Eerste code voor het bereken van een stroomprofiel in een cilindrische buis met water
-"""
+# Eerste code voor het bereken van een stroomprofiel in een cilindrische buis met water.
 
 import matplotlib.pyplot as plt
 import numpy as np
