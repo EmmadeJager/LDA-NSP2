@@ -165,41 +165,6 @@ if result.success:
     
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     # ENHANCED VISUALIZATION WITH UNCERTAINTIES
     fig = plt.figure(figsize=(16, 12))
     gs = fig.add_gridspec(3, 3, hspace=0.3, wspace=0.3)

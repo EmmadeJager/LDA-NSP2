@@ -1,3 +1,4 @@
+# Test-code voor de heatmap
 import sys
 
 import numpy as np
