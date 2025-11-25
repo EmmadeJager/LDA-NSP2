@@ -1,3 +1,5 @@
+# test code voor het simuleren van een kloppend stroomprofiel (circulair)
+
 import sys
 import numpy as np
 import pyqtgraph as pg

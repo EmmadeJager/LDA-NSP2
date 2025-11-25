@@ -1,14 +1,18 @@
+# code voor het fitten van histrogram-frequentie data uit LabView aan een Gaussfit. Met verschillende
+# fit functies voor het fitten van een vortexmodel.
+
 import numpy as np
 from scipy.optimize import curve_fit
 
-
+# definieer Gauss-functie
 def Gauss(x, A, B, slide):
     return A * np.exp(-B * (x - slide) ** 2)
 
-
+# definieer Gaussfit
 def gaussfit(xvals, yvals, A_guess, B_guess, C_guess):
     data = [xvals, yvals]
 
+    # neem parameters (met guess)
     parameters, _ = curve_fit(
         Gauss,
         data[0],
@@ -21,14 +25,15 @@ def gaussfit(xvals, yvals, A_guess, B_guess, C_guess):
 
     return fit_A, fit_B, fit_C, fit_y
 
-
+# definieer parabool-functie
 def parabola(x, a, b, c):
     return a * x**2 + b * x + c
 
-
+# definieer parabool-fit
 def parabfit(xvals, yvals, A_guess, B_guess, C_guess):
     data = [xvals, yvals]
 
+    # neem parameters
     parameters, _ = curve_fit(
         parabola,
         data[0],
@@ -43,9 +48,8 @@ def parabfit(xvals, yvals, A_guess, B_guess, C_guess):
 
     return fit_A, fit_B, fit_C, fit_y, fit_x
 
-
 def lamb_oseen_model(xy, x0, y0, Gamma, rc):
-    """Lamb-Oseen vortex fitting function"""
+    """Lamb-Oseen vortex fit-functie"""
     x, y = xy
 
     dx = x - x0
@@ -59,11 +63,9 @@ def lamb_oseen_model(xy, x0, y0, Gamma, rc):
 
     return np.abs(v_measured)
 
-
 def rankine_model(xy, x0, y0, Gamma, rc):
-    """Rankine (combined) vortex fitting function
-
-    Solid body rotation inside core, potential flow outside
+    """Rankine (samengesteld) vortex fitfunctie.
+    Laminente rotatie in het middel en potentiele ruis daarbuiten.
     """
     x, y = xy
 
@@ -72,12 +74,12 @@ def rankine_model(xy, x0, y0, Gamma, rc):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Rankine vortex: piecewise definition
+    # Rankine vortex
     v_tangential = np.where(
         r <= rc,
-        # Inside: solid body rotation
+        # Binnen: laminente rotatie
         (Gamma * r) / (2 * np.pi * rc**2),
-        # Outside: potential flow
+        # Buiten: potentiele ruis
         Gamma / (2 * np.pi * r),
     )
 
@@ -86,11 +88,9 @@ def rankine_model(xy, x0, y0, Gamma, rc):
 
     return np.abs(v_measured)
 
-
 def kaufmann_model(xy, x0, y0, Gamma, rc):
-    """Kaufmann (Scully) vortex fitting function
-
-    Smooth transition through core region
+    """Kaufmann vortex fitfunctie.
+    Gladde transitie door de middenregio.
     """
     x, y = xy
 
@@ -99,7 +99,7 @@ def kaufmann_model(xy, x0, y0, Gamma, rc):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Kaufmann vortex: smooth rational function
+    # Kaufmann vortex
     v_tangential = (Gamma / (2 * np.pi)) * (r / (r**2 + rc**2))
 
     theta = np.arctan2(dy, dx)
@@ -109,13 +109,13 @@ def kaufmann_model(xy, x0, y0, Gamma, rc):
 
 
 def vatistas_model(xy, x0, y0, Gamma, rc, n=1.0):
-    """Vatistas vortex - generalized model with shape parameter n
+    """Vatistas vortex - gegeneraliseerd model met vorm-parameter n
 
     n=1: Scully/Kaufmann vortex
-    n=2: Lamb-Oseen-like
+    n=2: Lamb-Oseen
     n→∞: Rankine vortex
 
-    Useful for finding the "best" vortex shape for your data
+    Te gebruiken voor het vinden van de "beste" vortexvorm voor data.
     """
     x, y = xy
 
@@ -124,7 +124,7 @@ def vatistas_model(xy, x0, y0, Gamma, rc, n=1.0):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Vatistas formula
+    # Vatistas formule
     v_tangential = (Gamma / (2 * np.pi * r)) * (r**n / (r**n + rc**n)) ** (1 / n)
 
     theta = np.arctan2(dy, dx)
@@ -132,11 +132,9 @@ def vatistas_model(xy, x0, y0, Gamma, rc, n=1.0):
 
     return np.abs(v_measured)
 
-
 def burgers_model(xy, x0, y0, Gamma, rc):
-    """Burgers vortex - includes axial strain effects
-
-    Good for: Vortices in strained flows, stretching vortices
+    """Burgers vortex - inclusief axesincludes axiale rekeffecten
+    Werkt voor: gerekte vortexen. Lijkt op lamb-oseen maar anders exponentieel.
     """
     x, y = xy
 
@@ -145,8 +143,8 @@ def burgers_model(xy, x0, y0, Gamma, rc):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Burgers vortex (similar to Lamb-Oseen but different exponential)
-    alpha = 1.25643  # Burgers parameter (can be fitted)
+    # Burgers vortex
+    alpha = 1.25643  # Burgers parameter
     v_tangential = (Gamma / (2 * np.pi * r)) * (1 - np.exp(-alpha * r**2 / rc**2))
 
     theta = np.arctan2(dy, dx)
@@ -154,11 +152,9 @@ def burgers_model(xy, x0, y0, Gamma, rc):
 
     return np.abs(v_measured)
 
-
 def sullivan_model(xy, x0, y0, Gamma, rc):
-    """Sullivan vortex - smooth Rankine variant
-
-    Good compromise between Rankine and Lamb-Oseen
+    """Sullivan vortex - gladde Rankine variant.
+    Goede compromie tussen Rankine en Lamb-Oseen.
     """
     x, y = xy
 
@@ -167,7 +163,7 @@ def sullivan_model(xy, x0, y0, Gamma, rc):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Sullivan formula (hyperbolic tangent transition)
+    # Sullivan formule
     v_tangential = (Gamma / (2 * np.pi * r)) * np.tanh(r / rc)
 
     theta = np.arctan2(dy, dx)
@@ -179,9 +175,9 @@ def sullivan_model(xy, x0, y0, Gamma, rc):
 def batchelor_model(xy, x0, y0, Gamma, rc, q=2.0):
     """Batchelor (q-vortex) model
 
-    q=2: Standard Gaussian profile
-    q>2: More concentrated core
-    q<2: More diffuse core
+    q=2: Standaar Gaussisch profiel
+    q>2: Geconcentreerd middelpunt
+    q<2: Meer diffuus middelpunt
     """
     x, y = xy
 
@@ -200,10 +196,10 @@ def batchelor_model(xy, x0, y0, Gamma, rc, q=2.0):
 
 
 def modified_rankine_model(xy, x0, y0, Gamma, rc, delta=0.1):
-    """Modified Rankine - smooth transition region
+    """Modified Rankine - gladde transitie regio
 
-    delta: transition width (fraction of rc)
-    delta→0: approaches sharp Rankine
+    delta: transitie weidte (fractie van rc)
+    delta→0: dichtbij scherpe rankine
     """
     x, y = xy
 
@@ -212,10 +208,10 @@ def modified_rankine_model(xy, x0, y0, Gamma, rc, delta=0.1):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Smooth transition using tanh
+    # gladde transitie met tanh
     transition = 0.5 * (1 + np.tanh((r - rc) / (delta * rc)))
 
-    # Blend between inner and outer
+    # transitie tussen binnen en buiten
     v_inner = (Gamma * r) / (2 * np.pi * rc**2)
     v_outer = Gamma / (2 * np.pi * r)
     v_tangential = v_inner * (1 - transition) + v_outer * transition
@@ -227,10 +223,10 @@ def modified_rankine_model(xy, x0, y0, Gamma, rc, delta=0.1):
 
 
 def two_cell_model(xy, x0, y0, Gamma, rc, beta=0.2):
-    """Two-cell vortex - counter-rotating inner core
+    """2-cel vortex - omgedraaide roterende middelpunt
 
-    beta: strength of counter-rotating core (typically 0.1-0.3)
-    Good for: Wake vortices, tornado-like structures
+    beta: strekte van roterend middelpunt (typisch 0.1-0.3)
+    Goed voor: tornado-achtige vortexen
     """
     x, y = xy
 
@@ -239,7 +235,7 @@ def two_cell_model(xy, x0, y0, Gamma, rc, beta=0.2):
     r = np.sqrt(dx**2 + dy**2)
     r = np.maximum(r, 1e-6)
 
-    # Two-cell structure
+    # 2-cel structuur
     v_tangential = (Gamma / (2 * np.pi * r)) * (
         (1 + beta) * (1 - np.exp(-(r**2) / rc**2))
         - beta * (1 - np.exp(-4 * r**2 / rc**2))

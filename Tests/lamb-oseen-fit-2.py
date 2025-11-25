@@ -1,3 +1,5 @@
+# test code voor lamb oseen fit
+
 import numpy as np
 from scipy.optimize import curve_fit, differential_evolution
 import matplotlib.pyplot as plt
@@ -161,41 +163,6 @@ if result.success:
     # Full grid prediction
     v_fitted_full = lamb_oseen_horizontal_lda((X, Y), *popt)
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     # ENHANCED VISUALIZATION WITH UNCERTAINTIES
