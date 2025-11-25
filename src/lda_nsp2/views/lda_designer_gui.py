@@ -29,13 +29,14 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(2085, 1198)
+        MainWindow.resize(2108, 1219)
         MainWindow.setMinimumSize(QSize(0, 0))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
+        self.verticalLayout_5 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.horizontalTabWidget = QTabWidget(self.centralwidget)
         self.horizontalTabWidget.setObjectName(u"horizontalTabWidget")
-        self.horizontalTabWidget.setGeometry(QRect(9, 9, 2071, 1131))
         self.gauss_fit_pane = QWidget()
         self.gauss_fit_pane.setObjectName(u"gauss_fit_pane")
         self.horizontalLayout = QHBoxLayout(self.gauss_fit_pane)
@@ -412,46 +413,43 @@ class Ui_MainWindow(object):
         self.horizontalTabWidget.addTab(self.velocity_pane, "")
         self.Vortex = QWidget()
         self.Vortex.setObjectName(u"Vortex")
+        self.horizontalLayout_19 = QHBoxLayout(self.Vortex)
+        self.horizontalLayout_19.setObjectName(u"horizontalLayout_19")
         self.tabWidget = QTabWidget(self.Vortex)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setEnabled(True)
-        self.tabWidget.setGeometry(QRect(0, 0, 2061, 1091))
         self.tabWidget.setElideMode(Qt.TextElideMode.ElideNone)
         self.tabWidget.setTabsClosable(False)
         self.tabWidget.setMovable(False)
         self.tabWidget.setTabBarAutoHide(False)
         self.DataIngestionTab = QWidget()
         self.DataIngestionTab.setObjectName(u"DataIngestionTab")
-        self.verticalLayoutWidget = QWidget(self.DataIngestionTab)
-        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 2051, 1061))
-        self.verticalLayout_5 = QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_17 = QVBoxLayout(self.DataIngestionTab)
+        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
         self.horizontalLayout_13 = QHBoxLayout()
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.horizontalLayout_13.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.verticalLayout_6 = QVBoxLayout()
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.verticalLayout_6.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
-        self.label_16 = QLabel(self.verticalLayoutWidget)
+        self.label_16 = QLabel(self.DataIngestionTab)
         self.label_16.setObjectName(u"label_16")
         self.label_16.setMaximumSize(QSize(250, 16777215))
 
         self.verticalLayout_6.addWidget(self.label_16)
 
-        self.listWidget = QListWidget(self.verticalLayoutWidget)
+        self.listWidget = QListWidget(self.DataIngestionTab)
         self.listWidget.setObjectName(u"listWidget")
         self.listWidget.setMaximumSize(QSize(250, 16777215))
 
         self.verticalLayout_6.addWidget(self.listWidget)
 
-        self.EditSelectedHistogramButton = QPushButton(self.verticalLayoutWidget)
+        self.EditSelectedHistogramButton = QPushButton(self.DataIngestionTab)
         self.EditSelectedHistogramButton.setObjectName(u"EditSelectedHistogramButton")
 
         self.verticalLayout_6.addWidget(self.EditSelectedHistogramButton)
 
-        self.DeleteSelectedHistogramButton = QPushButton(self.verticalLayoutWidget)
+        self.DeleteSelectedHistogramButton = QPushButton(self.DataIngestionTab)
         self.DeleteSelectedHistogramButton.setObjectName(u"DeleteSelectedHistogramButton")
 
         self.verticalLayout_6.addWidget(self.DeleteSelectedHistogramButton)
@@ -463,20 +461,31 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.horizontalLayout_15 = QHBoxLayout()
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
-        self.graphicsView_3 = PlotWidget(self.verticalLayoutWidget)
+        self.graphicsView_3 = PlotWidget(self.DataIngestionTab)
         self.graphicsView_3.setObjectName(u"graphicsView_3")
-        self.graphicsView_3.setMinimumSize(QSize(1750, 0))
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.graphicsView_3.sizePolicy().hasHeightForWidth())
+        self.graphicsView_3.setSizePolicy(sizePolicy1)
+        self.graphicsView_3.setMinimumSize(QSize(900, 0))
         self.graphicsView_3.setMaximumSize(QSize(100000, 10000))
 
         self.horizontalLayout_15.addWidget(self.graphicsView_3)
 
-        self.verticalFrame_2 = QFrame(self.verticalLayoutWidget)
+        self.verticalFrame_2 = QFrame(self.DataIngestionTab)
         self.verticalFrame_2.setObjectName(u"verticalFrame_2")
         self.verticalFrame_2.setMinimumSize(QSize(0, 0))
         self.verticalLayout_8 = QVBoxLayout(self.verticalFrame_2)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.verticalFrame_8 = QFrame(self.verticalFrame_2)
         self.verticalFrame_8.setObjectName(u"verticalFrame_8")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.verticalFrame_8.sizePolicy().hasHeightForWidth())
+        self.verticalFrame_8.setSizePolicy(sizePolicy2)
+        self.verticalFrame_8.setMinimumSize(QSize(0, 0))
         self.verticalFrame_8.setFrameShape(QFrame.Shape.StyledPanel)
         self.verticalLayout_14 = QVBoxLayout(self.verticalFrame_8)
         self.verticalLayout_14.setObjectName(u"verticalLayout_14")
@@ -513,6 +522,9 @@ class Ui_MainWindow(object):
 
         self.verticalFrame_7 = QFrame(self.verticalFrame_2)
         self.verticalFrame_7.setObjectName(u"verticalFrame_7")
+        sizePolicy2.setHeightForWidth(self.verticalFrame_7.sizePolicy().hasHeightForWidth())
+        self.verticalFrame_7.setSizePolicy(sizePolicy2)
+        self.verticalFrame_7.setMinimumSize(QSize(0, 0))
         self.verticalFrame_7.setFrameShape(QFrame.Shape.StyledPanel)
         self.verticalLayout_13 = QVBoxLayout(self.verticalFrame_7)
         self.verticalLayout_13.setObjectName(u"verticalLayout_13")
@@ -554,12 +566,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_15.addWidget(self.verticalFrame_2)
 
+        self.horizontalLayout_15.setStretch(0, 1)
 
         self.verticalLayout_7.addLayout(self.horizontalLayout_15)
 
         self.horizontalLayout_14 = QHBoxLayout()
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
-        self.verticalFrame_5 = QFrame(self.verticalLayoutWidget)
+        self.verticalFrame_5 = QFrame(self.DataIngestionTab)
         self.verticalFrame_5.setObjectName(u"verticalFrame_5")
         self.verticalFrame_5.setFrameShape(QFrame.Shape.StyledPanel)
         self.verticalLayout_10 = QVBoxLayout(self.verticalFrame_5)
@@ -577,7 +590,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_14.addWidget(self.verticalFrame_5)
 
-        self.verticalFrame_6 = QFrame(self.verticalLayoutWidget)
+        self.verticalFrame_6 = QFrame(self.DataIngestionTab)
         self.verticalFrame_6.setObjectName(u"verticalFrame_6")
         self.verticalFrame_6.setFrameShape(QFrame.Shape.StyledPanel)
         self.verticalLayout_12 = QVBoxLayout(self.verticalFrame_6)
@@ -596,7 +609,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_14.addWidget(self.verticalFrame_6)
 
-        self.verticalFrame_4 = QFrame(self.verticalLayoutWidget)
+        self.verticalFrame_4 = QFrame(self.DataIngestionTab)
         self.verticalFrame_4.setObjectName(u"verticalFrame_4")
         self.verticalFrame_4.setFrameShape(QFrame.Shape.StyledPanel)
         self.verticalLayout_9 = QVBoxLayout(self.verticalFrame_4)
@@ -625,10 +638,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_13.addLayout(self.verticalLayout_7)
 
+        self.horizontalLayout_13.setStretch(1, 1)
 
-        self.verticalLayout_5.addLayout(self.horizontalLayout_13)
+        self.verticalLayout_17.addLayout(self.horizontalLayout_13)
 
-        self.horizontalFrame_2 = QFrame(self.verticalLayoutWidget)
+        self.horizontalFrame_2 = QFrame(self.DataIngestionTab)
         self.horizontalFrame_2.setObjectName(u"horizontalFrame_2")
         self.horizontalFrame_2.setFrameShape(QFrame.Shape.StyledPanel)
         self.BottomButtonBar = QHBoxLayout(self.horizontalFrame_2)
@@ -670,33 +684,31 @@ class Ui_MainWindow(object):
         self.BottomButtonBar.addWidget(self.spinBox_3)
 
 
-        self.verticalLayout_5.addWidget(self.horizontalFrame_2)
+        self.verticalLayout_17.addWidget(self.horizontalFrame_2)
 
         self.tabWidget.addTab(self.DataIngestionTab, "")
         self.DataViewTab = QWidget()
         self.DataViewTab.setObjectName(u"DataViewTab")
-        self.verticalLayoutWidget_2 = QWidget(self.DataViewTab)
-        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(0, 0, 2051, 1061))
-        self.verticalLayout_11 = QVBoxLayout(self.verticalLayoutWidget_2)
+        self.verticalLayout_18 = QVBoxLayout(self.DataViewTab)
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.verticalLayout_11 = QVBoxLayout()
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_16 = QHBoxLayout()
         self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
         self.verticalLayout_15 = QVBoxLayout()
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
-        self.Fit_All_Histograms_Button = QPushButton(self.verticalLayoutWidget_2)
+        self.Fit_All_Histograms_Button = QPushButton(self.DataViewTab)
         self.Fit_All_Histograms_Button.setObjectName(u"Fit_All_Histograms_Button")
         self.Fit_All_Histograms_Button.setMinimumSize(QSize(150, 75))
 
         self.verticalLayout_15.addWidget(self.Fit_All_Histograms_Button)
 
-        self.label_26 = QLabel(self.verticalLayoutWidget_2)
+        self.label_26 = QLabel(self.DataViewTab)
         self.label_26.setObjectName(u"label_26")
 
         self.verticalLayout_15.addWidget(self.label_26)
 
-        self.comboBox = QComboBox(self.verticalLayoutWidget_2)
+        self.comboBox = QComboBox(self.DataViewTab)
         self.comboBox.setObjectName(u"comboBox")
 
         self.verticalLayout_15.addWidget(self.comboBox)
@@ -710,7 +722,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_16 = QVBoxLayout()
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
-        self.heatMapView = GraphicsLayoutWidget(self.verticalLayoutWidget_2)
+        self.heatMapView = GraphicsLayoutWidget(self.DataViewTab)
         self.heatMapView.setObjectName(u"heatMapView")
 
         self.verticalLayout_16.addWidget(self.heatMapView)
@@ -721,18 +733,19 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_11.addLayout(self.horizontalLayout_16)
 
+
+        self.verticalLayout_18.addLayout(self.verticalLayout_11)
+
         self.tabWidget.addTab(self.DataViewTab, "")
         self.ModelFitTab = QWidget()
         self.ModelFitTab.setObjectName(u"ModelFitTab")
-        self.horizontalLayoutWidget_4 = QWidget(self.ModelFitTab)
-        self.horizontalLayoutWidget_4.setObjectName(u"horizontalLayoutWidget_4")
-        self.horizontalLayoutWidget_4.setGeometry(QRect(0, 0, 2123, 1061))
-        self.horizontalLayout_17 = QHBoxLayout(self.horizontalLayoutWidget_4)
+        self.horizontalLayout_18 = QHBoxLayout(self.ModelFitTab)
+        self.horizontalLayout_18.setObjectName(u"horizontalLayout_18")
+        self.horizontalLayout_17 = QHBoxLayout()
         self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
-        self.horizontalLayout_17.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_20 = QVBoxLayout()
         self.verticalLayout_20.setObjectName(u"verticalLayout_20")
-        self.verticalFrame_71 = QFrame(self.horizontalLayoutWidget_4)
+        self.verticalFrame_71 = QFrame(self.ModelFitTab)
         self.verticalFrame_71.setObjectName(u"verticalFrame_71")
         self.verticalFrame_71.setFrameShape(QFrame.Shape.StyledPanel)
         self.verticalLayout_22 = QVBoxLayout(self.verticalFrame_71)
@@ -808,17 +821,17 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_20.addWidget(self.verticalFrame_71)
 
-        self.VortexFitLog = QTextEdit(self.horizontalLayoutWidget_4)
+        self.VortexFitLog = QTextEdit(self.ModelFitTab)
         self.VortexFitLog.setObjectName(u"VortexFitLog")
 
         self.verticalLayout_20.addWidget(self.VortexFitLog)
 
-        self.label_28 = QLabel(self.horizontalLayoutWidget_4)
+        self.label_28 = QLabel(self.ModelFitTab)
         self.label_28.setObjectName(u"label_28")
 
         self.verticalLayout_20.addWidget(self.label_28)
 
-        self.lcdNumber = QLCDNumber(self.horizontalLayoutWidget_4)
+        self.lcdNumber = QLCDNumber(self.ModelFitTab)
         self.lcdNumber.setObjectName(u"lcdNumber")
         self.lcdNumber.setFrameShape(QFrame.Shape.StyledPanel)
         self.lcdNumber.setSegmentStyle(QLCDNumber.SegmentStyle.Flat)
@@ -830,7 +843,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_21 = QVBoxLayout()
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
-        self.VortexModelFit_GraphicsView = GraphicsLayoutWidget(self.horizontalLayoutWidget_4)
+        self.VortexModelFit_GraphicsView = GraphicsLayoutWidget(self.ModelFitTab)
         self.VortexModelFit_GraphicsView.setObjectName(u"VortexModelFit_GraphicsView")
         self.VortexModelFit_GraphicsView.setMinimumSize(QSize(1800, 0))
 
@@ -839,12 +852,21 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_17.addLayout(self.verticalLayout_21)
 
+
+        self.horizontalLayout_18.addLayout(self.horizontalLayout_17)
+
         self.tabWidget.addTab(self.ModelFitTab, "")
+
+        self.horizontalLayout_19.addWidget(self.tabWidget)
+
         self.horizontalTabWidget.addTab(self.Vortex, "")
+
+        self.verticalLayout_5.addWidget(self.horizontalTabWidget)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 2085, 33))
+        self.menubar.setGeometry(QRect(0, 0, 2108, 33))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -853,7 +875,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.horizontalTabWidget.setCurrentIndex(2)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

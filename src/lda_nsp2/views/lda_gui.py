@@ -333,8 +333,8 @@ class UserInterface(QtWidgets.QMainWindow):
             self.vortex_master_data[hashTableAddress] = [
                 [x, y],
                 [
-                    fileCoords[0] + 12,
-                    fileCoords[1] + 12,
+                    fileCoords[0],
+                    fileCoords[1],
                     fileCoords[2],
                     fileCoords[3],
                     fileCoords[4],
