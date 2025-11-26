@@ -15,16 +15,18 @@ print("Bestanden gevonden:", files)
 
 for file_path in files:
     # Bestand inlezen
-    with open(file_path, "r") as dataFile:
+    with open(file_path, "r", encoding="latin1") as dataFile:
         data = [line.split() for line in dataFile]
 
     freqs = []
-    for line in data:
+    for line in data: 
         line = [i.replace(",", ".") for i in line]
+        if len(line) == 0:  # lege regel overslaan
+            continue
         try:
             freqs.append(float(line[0]))
         except ValueError:
-            continue  # sla lege of foutieve regels over
+            continue  # sla regels die geen getal bevatten over
 
     # Vortex nummer en coördinaten uit bestandsnaam halen
     base_name = os.path.basename(file_path)
