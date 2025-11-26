@@ -31,8 +31,8 @@ from lda_nsp2.models.filters import lowpass, highpass
 from scipy.optimize import differential_evolution, curve_fit
 
 # definieer configuratie voor user interface layout
-pg.setConfigOption("background", 0.2)
-pg.setConfigOption("foreground", 0.5)
+pg.setConfigOption("background", 'w')
+pg.setConfigOption("foreground", 'k')
 
 # class voor het maken van de GUI
 class UserInterface(QtWidgets.QMainWindow):
@@ -431,6 +431,10 @@ class UserInterface(QtWidgets.QMainWindow):
             x0=x[:-1], x1=x[1:], height=y, pen="w", brush=(16, 3, 0, 255)
         )
         self.ui.graphicsView_3.addItem(bgi)
+
+        plot_item = self.ui.graphicsView_3.getPlotItem()
+        plot_item.setLabel('bottom', 'Frequency (Hz)')
+        plot_item.setLabel('left', 'Occurrences')
 
     # optie tot lowpass filter
     def applylowpassfilter(self):
