@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 with open("(0,1,161) Vortex #18", "r") as dataFile:
     data = [line.split() for line in dataFile]
 
-    one_d = []
+    freqs = []
 
     for line in data:
         line = [i.replace(",", ".") for i in line]
-        one_d.append(float(line[0]))
+        freqs.append(float(line[0]))
 
-plt.hist(one_d, bins=30)
+plt.hist(freqs, bins=30)
 plt.xlabel("Waarde")
 plt.ylabel("Frequentie")
 plt.title("Vortex 18")
