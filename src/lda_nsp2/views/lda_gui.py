@@ -279,18 +279,26 @@ class UserInterface(QtWidgets.QMainWindow):
         fileCoords = [int(i) for i in fileCoordsNumbers.split(",")]
 
         # coordinaten
-        x_value = 50 + 22 + 8.5 * fileCoords[1]
-        y_value = 18.5
-        if fileCoords[1] == 0:
-            z = 6.5
-        elif fileCoords[1] == 1:
-            z = 5.5
-        elif fileCoords[1] == 2:
-            z = 4
-        elif fileCoords[1] == 3:
-            z = 2.5
-        elif fileCoords[1] == 4:
+        x_value = 71 + 9.5 * fileCoords[1]
+        y_value = 20
+        if fileCoords[1] == 0.0:
+            z = 6.0
+        elif fileCoords[1] == 0.5:
+            z = 5.0
+        elif fileCoords[1] == 1.0:
+            z = 4.0
+        elif fileCoords[1] == 1.5:
+            z = 3.5
+        elif fileCoords[1] == 2.0:
+            z = 3.5
+        elif fileCoords[1] == 2.5:
+            z = 3.0
+        elif fileCoords[1] == 3.0:
             z = 1.5
+        elif fileCoords[1] == 3.5:
+            z = 1.0
+        elif fileCoords[1] == 4.0:
+            z = 0.5
 
         fileCoords.append(x_value)
         fileCoords.append(y_value)
@@ -329,20 +337,30 @@ class UserInterface(QtWidgets.QMainWindow):
             for i in fileCoords:
                 fileCoordsNumbers += i
 
-            fileCoords = [int(i) for i in fileCoordsNumbers.split(",")]
+            fileCoords = [float(i) for i in fileCoordsNumbers.split(",")]
 
-            x_value = 50 + 22 + 8.5 * fileCoords[1]
-            y_value = 18.5
-            if fileCoords[1] == 0:
-                z = 6.5
-            elif fileCoords[1] == 1:
-                z = 5.5
-            elif fileCoords[1] == 2:
-                z = 4
-            elif fileCoords[1] == 3:
-                z = 2.5
-            elif fileCoords[1] == 4:
+            print(fileCoords)
+
+            x_value = 71 + 9.5 * fileCoords[1]
+            y_value = 20
+            if fileCoords[1] == 0.0:
+                z = 6.0
+            elif fileCoords[1] == 0.5:
+                z = 5.0
+            elif fileCoords[1] == 1.0:
+                z = 4.0
+            elif fileCoords[1] == 1.5:
+                z = 3.5
+            elif fileCoords[1] == 2.0:
+                z = 3.5
+            elif fileCoords[1] == 2.5:
+                z = 3.0
+            elif fileCoords[1] == 3.0:
                 z = 1.5
+            elif fileCoords[1] == 3.5:
+                z = 1.0
+            elif fileCoords[1] == 4.0:
+                z = 0.5
 
             fileCoords.append(x_value)
             fileCoords.append(y_value)
@@ -353,8 +371,8 @@ class UserInterface(QtWidgets.QMainWindow):
             self.vortex_master_data[hashTableAddress] = [
                 [x, y],
                 [
-                    fileCoords[0],
-                    fileCoords[1],
+                    fileCoords[0] * 10,
+                    fileCoords[1] * 10,
                     fileCoords[2],
                     fileCoords[3],
                     fileCoords[4],
