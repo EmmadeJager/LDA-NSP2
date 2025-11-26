@@ -1,38 +1,40 @@
-# Hoofdcode voor het analyseren van frequentiedata uit LabView, gemeten aan de bovenkant van een 
+# Hoofdcode voor het analyseren van frequentiedata uit LabView, gemeten aan de bovenkant van een
 # vortex met LDA, en het fitten aan een vortexmodel en simuleren van een heatmap als stroomprofiel.
 
 import sys
-from pgcolorbar.colorlegend import ColorLegendItem
 
-import pyqtgraph as pg
-from PySide6 import QtWidgets, QtCore
-from PySide6.QtCore import Slot
-from PySide6.QtWidgets import QListWidgetItem, QDialog
-from rich import print
 import numpy as np
+import pyqtgraph as pg
+from pgcolorbar.colorlegend import ColorLegendItem
+from PySide6 import QtCore, QtWidgets
+from PySide6.QtCore import Slot
+from PySide6.QtWidgets import QDialog, QListWidgetItem
+from rich import print
+from scipy.optimize import curve_fit, differential_evolution
+
 from lda_nsp2.data_ingestion import Ingest_Data, Ingest_Data_1D
+from lda_nsp2.models.filters import highpass, lowpass
 from lda_nsp2.models.fitting import (
-    gaussfit,
-    parabfit,
-    lamb_oseen_model,
-    kaufmann_model,
-    rankine_model,
+    batchelor_model,
     burgers_model,
+    gaussfit,
+    kaufmann_model,
+    lamb_oseen_model,
     modified_rankine_model,
+    parabfit,
+    rankine_model,
     sullivan_model,
     two_cell_model,
     vatistas_model,
-    batchelor_model,
 )
 from lda_nsp2.models.velocitycalculation import bereken_v
 from lda_nsp2.views.lda_designer_gui import Ui_MainWindow
 from lda_nsp2.views.lda_vortex_histogram_edit_dialog import Ui_Dialog
-from lda_nsp2.models.filters import lowpass, highpass
-from scipy.optimize import differential_evolution, curve_fit
 
 # definieer configuratie voor user interface layout
 pg.setConfigOption("background", 'w')
 pg.setConfigOption("foreground", 'k')
+
 
 # class voor het maken van de GUI
 class UserInterface(QtWidgets.QMainWindow):
@@ -145,7 +147,7 @@ class UserInterface(QtWidgets.QMainWindow):
         if not self.data:
             self.error_modal("Please import data before fitting.")
             return
-        
+
         # guess parameters
         A_guess = self.ui.param1_guess_spinbox.value()
         B_guess = self.ui.param2_guess_spinbox.value()
@@ -174,19 +176,19 @@ class UserInterface(QtWidgets.QMainWindow):
         if not self.fit_C:
             self.error_modal("Please fit before calculating the velocity.")
             return
-        
+
         # geef afstanden mee
         x = self.ui.x_measurement_spinbox.value()
         y = self.ui.y_measurement_spinbox.value()
         z = self.ui.z_measurement_spinbox.value()
         f = self.fit_C
-        
+
         # geef fouten mee
         x_err = self.ui.x_uncertainty_spinbox.value()
         y_err = self.ui.y_uncertainty_spinbox.value()
         z_err = self.ui.z_uncertainty_spinbox.value()
         f_err = 100
-        
+
         # bereken resultaten
         results = bereken_v(x, y, z, f, x_err, y_err, z_err, f_err)
 
@@ -214,7 +216,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.refraction_coefficient_spinbox.setEnabled(
             self.ui.refraction_correction_checkbox.isChecked()
         )
- 
+
     # voeg toe aan tabel
     @Slot()
     def add_to_table(self):
@@ -371,9 +373,9 @@ class UserInterface(QtWidgets.QMainWindow):
             self.vortex_master_data[hashTableAddress] = [
                 [x, y],
                 [
-                    fileCoords[0] * 10,
-                    fileCoords[1] * 10,
-                    fileCoords[2],
+                    int(fileCoords[0] * 2),
+                    int(fileCoords[1] * 2),
+                    int(fileCoords[2]),
                     fileCoords[3],
                     fileCoords[4],
                     fileCoords[5],
@@ -604,9 +606,9 @@ class UserInterface(QtWidgets.QMainWindow):
         self.velocitylist = []
         for i in range(200):
             velocity_grid = []
-            for i in range(30):
+            for i in range(50):
                 velocity_line = []
-                for j in range(30):
+                for j in range(50):
                     velocity_line.append(None)
                 velocity_grid.append(velocity_line)
             self.velocitylist.append(velocity_grid)
@@ -628,6 +630,8 @@ class UserInterface(QtWidgets.QMainWindow):
                 D = metadata[0]
                 R = metadata[1]
                 H = metadata[2]
+
+                print(f"D={D}, R={R}, H={H}")
 
                 if H not in available_heights:
                     available_heights.append(H)
@@ -996,8 +1000,8 @@ class UserInterface(QtWidgets.QMainWindow):
                 return 1e10
 
         bounds = [
-            (-1, 2),  # x0
-            (1, 4),  # y0
+            (0, 40),  # x0
+            (0, 40),  # y0
             (-50, 50),  # Gamma
             (0.1, 5),  # rc
         ]
