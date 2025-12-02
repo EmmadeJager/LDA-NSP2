@@ -2,7 +2,7 @@
 # vortex met LDA, en het fitten aan een vortexmodel en simuleren van een heatmap als stroomprofiel.
 
 import sys
-
+import csv
 import numpy as np
 import pyqtgraph as pg
 from pgcolorbar.colorlegend import ColorLegendItem
@@ -1053,6 +1053,23 @@ class UserInterface(QtWidgets.QMainWindow):
                     f"  Core radius rc:  {rc_fit:.6f} ± {perr[3]:.6f}"
                 )
 
+
+                print(f"\n{'=' * 30}")
+                print("FITTED PARAMETERS (with uncertainties):")
+                print(f"{'=' * 30}")
+                print(
+                    f"  Vortex center X: {x0_fit:.4f} ± {perr[0]:.4f}"
+                )
+                print(
+                    f"  Vortex center Y: {y0_fit:.4f} ± {perr[1]:.4f}"
+                )
+                print(
+                    f"  Circulation Γ:   {Gamma_fit:.6f} ± {perr[2]:.6f}"
+                )
+                print(
+                    f"  Core radius rc:  {rc_fit:.6f} ± {perr[3]:.6f}"
+                )
+
             except Exception as e:
                 self.ui.VortexFitLog.append(f"Refinement failed: {e}")
                 self.ui.VortexFitLog.append("Using differential evolution result")
@@ -1107,6 +1124,18 @@ class UserInterface(QtWidgets.QMainWindow):
             # Full grid prediction
             v_fitted_full = model((X, Y), *popt)
 
+            with open("EXPORT_original_data.csv", mode="w", newline="") as original_data_file:
+                writer = csv.writer(original_data_file)
+                writer.writerows(data)
+            
+            with open("EXPORT_fitted_full_data.csv", mode="w", newline="") as fitted_full_data_file:
+                writer = csv.writer(fitted_full_data_file)
+                writer.writerows(v_fitted_full)
+
+            with open("EXPORT_uncertainty_data.csv", mode="w", newline="") as uncertainty_data_file:
+                writer = csv.writer(uncertainty_data_file)
+                writer.writerows(sigma)
+
             if plotting:
                 self.ui.VortexModelFit_GraphicsView.clear()
 
@@ -1118,6 +1147,7 @@ class UserInterface(QtWidgets.QMainWindow):
                     "bwr",
                     "Velocity (m/s)",
                 )
+                print(data)
                 self.plotOriginalMeasurements(
                     v_fitted_full,
                     x0_fit,
@@ -1164,6 +1194,9 @@ class UserInterface(QtWidgets.QMainWindow):
 
                 self.ui.VortexModelFit_GraphicsView.ci.layout.setRowStretchFactor(0, 1)
                 self.ui.VortexModelFit_GraphicsView.ci.layout.setRowStretchFactor(1, 1)
+
+
+
         else:
             self.ui.VortexFitLog.append("Fitting Failed")
 
