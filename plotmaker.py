@@ -35,46 +35,48 @@ sigma_data = np.loadtxt("EXPORT_uncertainty_data.csv", delimiter=",")
 x0_fit = 1.4221
 y0_fit = 3.4077
 
+fig, (ax1, ax2) = plt.subplots(1, 2, gridspec_kw={'wspace': 0.1}, figsize=(20, 10))
+# fig.suptitle('Horizontally stacked subplots')
 
-plt.figure(figsize=(8, 8))
 fontdict = {"family": "serif", "size": 12}
-plt.imshow(
+im1 = ax1.imshow(
     raw_data.T[:10, :10],
     cmap="twilight_shifted",
     origin="lower",
     norm=colors.LogNorm(vmin=0.1, vmax=raw_data.max()),
 )
-plt.plot(x0_fit, y0_fit, "k+", markersize=20, markeredgewidth=3)
-plt.xlabel("X position", fontdict=fontdict)
-plt.ylabel("Y position", fontdict=fontdict)
-plt.tick_params(axis="both", labelsize=10)
-plt.title("Original LDA Measurements", fontdict=fontdict)
+ax1.plot(x0_fit, y0_fit, "k+", markersize=20, markeredgewidth=3)
+# ax1.set(xlabel='X position', ylabel='Y position')
+ax1.set_xlabel("X position", fontdict=fontdict)
+ax1.set_ylabel("Y position", fontdict=fontdict)
+ax1.tick_params(axis="both", labelsize=10)
+# ax1.title("Original LDA Measurements", fontdict=fontdict)
 
-plt.colorbar(label="Velocity (m/s)", shrink=1.0, aspect=20)
-plt.savefig("original_heatmap.pdf", bbox_inches="tight")
+fig.colorbar(label="Velocity (m/s)", shrink=0.6, aspect=20, mappable=im1, ax=ax1)
+# ax1.savefig("original_heatmap.pdf", bbox_inches="tight")
 
 
-plt.figure(figsize=(8, 8))
 fontdict = {"family": "serif", "size": 12}
-plt.imshow(
+im2 = ax2.imshow(
     fitted_data.T[:30, :30],
     cmap="twilight_shifted",
     origin="lower",
     norm=colors.LogNorm(vmin=0.1, vmax=fitted_data.max()),
 )
-plt.colorbar(label="Velocity (m/s)")
+fig.colorbar(label="Velocity (m/s)", mappable=im2, ax=ax2, shrink=0.6)
 # get coordinates where mask is non-zero
 y_idx, x_idx = np.where(raw_data.T != 0)
-plt.scatter(x_idx, y_idx, c="gray", s=50, alpha=0.5, marker="x")
+ax2.scatter(x_idx, y_idx, c="gray", s=50, alpha=0.5, marker="x")
 
-plt.plot(x0_fit, y0_fit, "k+", markersize=20, markeredgewidth=3)
-plt.xlabel("X position", fontdict=fontdict)
-plt.ylabel("Y position", fontdict=fontdict)
-plt.tick_params(axis="both", labelsize=10)
-plt.title("Fitted Lamb-Oseen", fontdict=fontdict)
+ax2.plot(x0_fit, y0_fit, "k+", markersize=20, markeredgewidth=3)
+# ax2.set(xlabel='X position', ylabel='Y position')
+ax2.set_xlabel("X position", fontdict=fontdict)
+ax2.set_ylabel("Y position", fontdict=fontdict)
+ax2.tick_params(axis="both", labelsize=10)
+# ax2.title("Fitted Lamb-Oseen", fontdict=fontdict)
 
 
-plt.savefig("fitted_heatmap.pdf", bbox_inches="tight")
+fig.savefig("fitted_heatmap.pdf", bbox_inches="tight")
 
 
 plt.figure(figsize=(8, 8))
@@ -93,6 +95,36 @@ plt.title("Measurement Uncertainties", fontdict=fontdict)
 
 plt.colorbar(label="Velocity (m/s)")
 plt.savefig("sigma_heatmap.pdf", bbox_inches="tight")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 histogram = Ingest_Data_1D("Tests\(0,4,154) Vortex #05")
